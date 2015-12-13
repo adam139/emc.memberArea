@@ -1,0 +1,28 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:browser="http://namespaces.zope.org/browser"
+    xmlns:z3c="http://namespaces.zope.org/z3c"  
+    i18n_domain="emc.bokeh">
+
+  <!-- Register static resource directory -->
+	<browser:resourceDirectory
+  		name="emc.bokeh"
+  		directory="static" />
+   <browser:page
+        name="datainout-getCSVTemplate"
+        for="Products.CMFPlone.interfaces.IPloneSiteRoot"
+        class=".datainout.DataInOut"
+        attribute="getCSVTemplate"
+        permission="cmf.ManagePortal"
+
+        />  		
+  <include package="z3c.form" file="meta.zcml" />
+  <include package="z3c.form" />
+   <z3c:widgetTemplate
+        mode="input"
+ 		widget="plone.formwidget.namedfile.interfaces.INamedFileWidget"        
+ 		layer="emc.theme.interfaces.IThemeSpecific"
+ 		template="templates/file_input.pt" />
+
+		       
+</configure>

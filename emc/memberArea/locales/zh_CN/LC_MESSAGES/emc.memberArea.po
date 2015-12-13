@@ -1,0 +1,55 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: emc bokeh\n"
+"POT-Creation-Date: 2015-12-13 08:24+0000\n"
+"PO-Revision-Date: 2015-11-26 10:08+0800\n"
+"Last-Translator: adam <yuejun.tang@gmail.com>\n"
+"Language-Team: LANGUAGE <yuejun.tang@gmail.com>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0\n"
+"Language-Code: zh_CN\n"
+"Language-Name: English\n"
+"Preferred-Encodings: utf-8 latin1\n"
+"Domain: my315ok.socialorgnization\n"
+"X-Poedit-Language: Chinese\n"
+
+#: ./content/message.py:53
+msgid "Attach your figure data report file(csv format)."
+msgstr "上载你的图形数据文件(CSV格式)"
+
+#: ./browser/glyphs_view.py:101
+msgid "Wrong specification of the CSV file. Please correct it and retry."
+msgstr ""
+
+#: ./content/message.py:52
+msgid "figure data"
+msgstr "图形数据"
+
+#: ./profiles/default/types/emc.memberArea.message.xml
+msgid "message"
+msgstr ""
+
+#: ./profiles/default/types/emc.memberArea.message.xml
+msgid "message content type"
+msgstr ""
+
+#: ./profiles/default/types/emc.memberArea.messagebox.xml
+msgid "messagebox"
+msgstr ""
+
+#: ./profiles/default/types/emc.memberArea.messagebox.xml
+msgid "messagebox content type"
+msgstr ""
+
+#: ./content/message.py:45
+#: ./content/messagebox.py:45
+msgid "standard description"
+msgstr "标准描述"
+
+#: ./content/message.py:41
+#: ./content/messagebox.py:41
+msgid "standard name"
+msgstr "标准名称"
+
