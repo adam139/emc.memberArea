@@ -10,12 +10,12 @@ from zope.lifecycleevent.interfaces import IObjectAddedEvent
 
 @grok.subscribe(IPropertiedUser,IMemberAreaCreatedEvent)
 def creatementionwofolder(obj,event):
-    """创建提到我文件夹"""
+    """创建个人信箱"""
     pm = getToolByName(obj,'portal_membership')
     fd = pm.getHomeFolder(pm.getAuthenticatedMember().getId())
     if fd is None: return    
     id = 'messagebox'
-    item = createContentInContainer(file,"emc.memberArea.messagebox",checkConstraints=False,id=id)
+    item = createContentInContainer(fd,"emc.memberArea.messagebox",checkConstraints=False,id=id)
     item.id = id
     item.title = u'个人信箱'
 

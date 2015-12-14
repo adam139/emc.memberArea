@@ -11,12 +11,14 @@ class Allcontents(unittest.TestCase):
         portal = self.layer['portal']
         setRoles(portal, TEST_USER_ID, ('Manager',))
 
-        portal.invokeFactory('emc.memberArea.messagebox', 'messagebox1')
-        portal['messagebox1'].invokeFactory('emc.memberArea.message', 'message1')        
+        portal.invokeFactory('emc.memberArea.messagebox', 'folder1')
+        portal['folder1'].invokeFactory('emc.memberArea.message', 'message1')  
+             
 
         self.portal = portal
     
     def test_item_types(self):
-        self.assertEqual(self.portal['messagebox1'].id,'messagebox1')
-        self.assertEqual(self.portal['messagebox1']['message1'].id,'message1')    
+        self.assertEqual(self.portal['folder1'].id,'folder1')
+        self.assertEqual(self.portal['folder1']['message1'].id,'message1')   
+       
         

@@ -5,7 +5,7 @@ version = '1.0'
 
 setup(name='emc.memberArea',
       version=version,
-      description="member area provide incoming message etc. functions"",
+      description="member area provide incoming message etc. functions",
       long_description=open("README.txt").read() + "\n" +
                        open(os.path.join("docs", "HISTORY.txt")).read(),
       # Get more strings from
@@ -25,14 +25,21 @@ setup(name='emc.memberArea',
       zip_safe=False,
       install_requires=[
           'setuptools',
+          'plone.app.dexterity',
+          'plone.directives.form',
+          'plone.directives.dexterity',
+          'collective.dexteritytextindexer',                                
           # -*- Extra requirements: -*-
       ],
+      extras_require={
+          'test': ['plone.app.testing',]
+          },           
       entry_points="""
       # -*- Entry points: -*-
 
       [z3c.autoinclude.plugin]
       target = plone
       """,
-      setup_requires=["PasteScript"],
-      paster_plugins=["ZopeSkel"],
+#       setup_requires=["PasteScript"],
+#       paster_plugins=["ZopeSkel"],
       )
