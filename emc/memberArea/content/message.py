@@ -6,22 +6,34 @@ from plone.app.dexterity.behaviors.metadata import IBasic
 
 from collective import dexteritytextindexer
 from collective.dexteritytextindexer.behavior import IDexterityTextIndexer
-
+from plone.formwidget.autocomplete.widget import AutocompleteMultiFieldWidget
 from emc.memberArea import _
-
-class IMessage(form.Schema,IBasic):
+    
+class IMessage(form.Schema):
     """
     emc project member area message content type
     """
 #标准名称
     dexteritytextindexer.searchable('title')    
-    title = schema.TextLine(title=_(u"standard name"),
-                             default=u"",
-                            required=True,) 
-#标准描述        
-    description = schema.TextLine(title=_(u"standard description"),
-                             default=u"",
-                             required=False,)        
+    title = schema.TextLine(title=_(u"site message title"),
+            required=True)
 
+    form.widget(description="plone.app.z3cform.wysiwyg.WysiwygFieldWidget")
+    description = schema.Text(
+        title=_(u"message text"),
+        required=True)
+    form.widget(sendto=AutocompleteMultiFieldWidget)    
+    sendto = schema.Tuple(
+        title=_(u"send to"),
+        value_type=schema.Choice(title=_(u"send to"),
+                                  source=u"plone.principalsource.Users"),
+        required=True,
+        missing_value=(), # important!
+    )           
 
+@form.validator(field=IMessage['description'])
+def maxSize(value):
+    if value is not None:
+        if value.getSize()/1024 > 128:
+            raise schema.ValidationError(_(u"message text must be smaller than 128KB"))
  

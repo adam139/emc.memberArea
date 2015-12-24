@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      metal:use-macro="context/main_template/macros/master"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"      
+      i18n:domain="emc.memberArea">        
+
+
+<section id="content-core">
+<metal:main fill-slot="content-core
+ <tal:main-macro metal:define-macro="content-core">
+      <div class="row">
+       	<div class="col-xs-12">
+       		<div class="body" tal:content="structure python:context.text">body text      	
+      			</div> 		     	 		
+       	</div>
+      </div>    	
+    </tal:main-macro>
+</metal:main>
+</section>
+</html>
