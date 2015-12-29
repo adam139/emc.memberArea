@@ -3,6 +3,7 @@ from five import grok
 from z3c.form import field
 import json
 from Acquisition import aq_inner
+from Acquisition import aq_parent
 from zope.component import getMultiAdapter
 from Products.CMFCore.utils import getToolByName
 from plone.app.layout.navigation.interfaces import INavigationRoot
@@ -12,6 +13,7 @@ from plone.directives import dexterity
 from plone.memoize.instance import memoize
 from emc.memberArea.content.messagebox import IMessagebox
 from emc.memberArea.content.message import IMessage
+from emc.memberArea.content.todo import ITodo
 from emc.theme.interfaces import IThemeSpecific
 
 
@@ -51,7 +53,7 @@ class MessageboxView(BaseView):
     "emc memberArea messagebox view"
     grok.context(IMessagebox)
     grok.template('messagebox_view')
-    grok.name('view')
+    grok.name('ajax_view')
     grok.require('zope2.View')
     
     def update(self):
@@ -79,37 +81,65 @@ class MessageboxView(BaseView):
                                               sort_on="created",
                                               b_start= start,
                                               b_size=size)            
-        return self.outputList(braindata)      
+        return self.outputList(braindata)
+    
+#     def getMemberList(self):
+#         """获取会员列表,this has been stoped"""
+#         mlist = []
+#         memberbrains = self.getMessagebrains()                   
+# 
+#         for brain in memberbrains:           
+#             row = {'id':'', 'name':'',  'url':'','sender':'',
+#                     'register_date':'', 'status':'', 'editurl':'',
+#                     'delurl':''}
+#             row['id'] = brain.id
+#             row['name'] = brain.Title
+#             id = brain.id               
+#             row['url'] = brain.getURL()
+#             row['sender'] = brain.Creator
+#             row['register_date'] = brain.created.strftime('%Y-%m-%d')
+#             row['status'] = brain.review_state
+#             row['editurl'] = row['url'] + '/@@edit-baseinfo'
+#             row['delurl'] = row['url'] + '/delete_confirmation'            
+#             mlist.append(row)
+#         return mlist          
     
     def outputList(self,braindata):
         """ output brains for template render
         """
         outhtml = ""
-        brainnum = len(braindata)        
+        brainnum = len(braindata)
+        obj = self.context
+               #message content type just two status:"unreaded","readed"
+        if obj.id == "messagebox":
+            bsurl = obj.absolute_url() + "/outputbox"
+        elif obj.id == "outputbox":
+            bsurl = obj.absolute_url()
+        else:
+            bsurl = aq_parent(obj).absolute_url() + "/outputbox"
+        answerurl = bsurl + "/@@write_message"       
         for i in braindata:
             objurl =  i.getURL()           
             id = i.id            
             name = i.Title # message object's title
-            sender = i.creator
+            sender = i.Creator
             register_date = i.created.strftime('%Y-%m-%d')
-            status = i.review_state   #message content type just two status:"unreaded","readed"
-            editurl = "%s/@@edit-baseinfo" % objurl
+            status = i.review_state              
+                
+
             delurl = "%s/delete_confirmation" % objurl
                         
             out = """<tr class="row">
-                  <td class="col-md-1">
+                  <td class="col-md-4">
                       <a href="%(url)s">
                          <span>%(name)s</span>
                       </a>
-                  </td>
-                  <td class="col-md-2 text-left" >
-                      <span>%(roles)s</span>
-                  </td>                 
+                  </td>                
                   <td class="col-md-2 text-left">%(sender)s
                   </td>
-                  <td class="col-md-1">%(register_date)s
+                  <td class="col-md-2">%(register_date)s
                   </td>
-                  <td class="col-md-1 handler">""" % dict(url=objurl,
+                  <td class="col-md-2 handler">""" % dict(url=objurl,
                                                           name=name,
                                                           sender=sender,
                                                           register_date=register_date)
@@ -136,7 +166,7 @@ class MessageboxView(BaseView):
                   <td class="col-md-2">
                                     <div i18n:domain="plone" class="row">
                                         <div class="col-md-6 text-center">
-                                        <a href="%(editurl)s" class="link-overlay btn btn-success">
+                                        <a href="%(answerurl)s" class="link-overlay btn btn-success">
                                       <i class="icon-pencil icon-white"></i>回复</a>
                                   </div>
                                   <div class="col-md-6 text-center">
@@ -145,7 +175,7 @@ class MessageboxView(BaseView):
                                   </div>
                                     </div>
                    </td>          
-                  </tr>""" % dict(editurl=editurl,delurl=delurl)           
+                  </tr>""" % dict(answerurl=answerurl,delurl=delurl)           
             outhtml = "%s%s%s%s" %(outhtml,out,out1,out2)
         return outhtml
     
@@ -178,7 +208,9 @@ class MessageAjaxSearch(grok.View):
         # search all                         
         totalbrains = searchview.allitems()
         totalnum = len(totalbrains)
-        # batch search         
+        # batch search 
+#         import pdb
+#         pdb.set_trace()        
         outhtml = searchview.getMessagebrains(start=start,size=size)
         data = self.output(start,size,totalnum, outhtml)
         self.request.response.setHeader('Content-Type', 'application/json')
@@ -187,14 +219,81 @@ class MessageAjaxSearch(grok.View):
     def output(self,start,size,totalnum,outhtml):
         "根据参数total,braindata,返回jason 输出"           
         data = {'searchresult': outhtml,'start':start,'size':size,'total':totalnum}
-        return data     
+        return data
+         
+class MessageboxListView(MessageboxView):
+     "emc memberArea messagebox view"
+     
+     grok.context(IMessagebox)
+     grok.template('messagebox_listing')
+     grok.name('view')
+     grok.require('zope2.View')
+     
+class TodoListView(MessageboxView):
+     "emc memberArea todo listing view"
+     
+     grok.context(ITodo)
+     grok.template('todo_listing')
+     grok.name('view')
+     grok.require('zope2.View')
+     
+     def getMessagebrains(self,start=0,size=0):
+        "return messags data"
 
+        from plone import api
+        current = api.user.get_current()
+        if size==0:
+            braindata = self.allitems()
+        else:
+            braindata = self.catalog()(object_provides=IMessage.__identifier__,                                
+                                              sort_order="reverse",
+                                              sort_on="created",
+                                              b_start= start,
+                                              b_size=size)            
+        return self.outputList(braindata)     
+          
+     def outputList(self,braindata):
+        """ output brains for template render
+        """
+        outhtml = ""
+        brainnum = len(braindata)
+        obj = self.context
+      
+        for i in braindata:
+            objurl =  i.getURL()           
+            id = i.id            
+            name = i.Title # message object's title
+            descripton = i.Description
+            sender = i.Creator
+            register_date = i.created.strftime('%Y-%m-%d')
+#             status = i.review_state                          
+                        
+            out = """<tr class="row">
+                  <td class="col-md-4">
+                      <a href="%(url)s">
+                         <span>%(name)s</span>
+                      </a>
+                  </td>                
+                  <td class="col-md-6 text-left">%(description)s
+                  </td>
+                  <td class="col-md-2">%(register_date)s
+                  </td>""" % dict(url=objurl,
+                                                          name=name,
+                                                          description=description,
+                                                          register_date=register_date)                 
+                                     
+         
+            outhtml = "%s%s" %(outhtml,out)
+        return outhtml
+        
+       
 class MessageMore(grok.View):
     """message list view AJAX action for click more. default batch size is 10.
     """
     
     grok.context(IMessagebox)
     grok.name('more')
+    grok.layer(IThemeSpecific)
     grok.require('zope2.View')            
     
     def render(self):

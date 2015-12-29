@@ -6,17 +6,24 @@
       xmlns:i18n="http://xml.zope.org/namespaces/i18n"      
       i18n:domain="emc.memberArea">        
 
-
-<section id="content-core">
-<metal:main fill-slot="content-core
- <tal:main-macro metal:define-macro="content-core">
+<head>
+      <metal:block fill-slot="top_slot">
+        <tal:insert tal:replace="nothing"
+              tal:define="dummy python:request.set('enable_border', 1);
+                          disable_column_one python:request.set('disable_plone.leftcolumn', 1);
+                          disable_column_two python:request.set('disable_plone.rightcolumn', 1);" />
+      </metal:block>
+  </head>
+<body>
+<metal:main fill-slot="core-content">
+    <tal:main-macro metal:define-macro="core-content">
       <div class="row">
        	<div class="col-xs-12">
-       		<div class="body" tal:content="structure python:context.text">body text      	
-      			</div> 		     	 		
+       		<div class="body" tal:content="structure python:context.text">body text</div> 		     	 		
        	</div>
-      </div>    	
+      </div> 
+    	
     </tal:main-macro>
 </metal:main>
-</section>
+</body>
 </html>

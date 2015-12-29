@@ -28,12 +28,12 @@ class IMessage(form.Schema):
         value_type=schema.Choice(title=_(u"send to"),
                                   source=u"plone.principalsource.Users"),
         required=True,
-        missing_value=(), # important!
+#         missing_value=(), # important!
     )           
 
 @form.validator(field=IMessage['description'])
 def maxSize(value):
     if value is not None:
-        if value.getSize()/1024 > 128:
+        if len(value)/1024 > 128:
             raise schema.ValidationError(_(u"message text must be smaller than 128KB"))
  

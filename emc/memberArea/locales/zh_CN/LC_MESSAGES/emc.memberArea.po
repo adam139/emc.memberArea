@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: emc bokeh\n"
-"POT-Creation-Date: 2015-12-13 08:24+0000\n"
-"PO-Revision-Date: 2015-11-26 10:08+0800\n"
+"POT-Creation-Date: 2015-12-27 04:57+0000\n"
+"PO-Revision-Date: 2015-12-26 20:13+0800\n"
 "Last-Translator: adam <yuejun.tang@gmail.com>\n"
 "Language-Team: LANGUAGE <yuejun.tang@gmail.com>\n"
 "MIME-Version: 1.0\n"
@@ -15,41 +15,92 @@ msgstr ""
 "Domain: my315ok.socialorgnization\n"
 "X-Poedit-Language: Chinese\n"
 
-#: ./content/message.py:53
-msgid "Attach your figure data report file(csv format)."
-msgstr "上载你的图形数据文件(CSV格式)"
-
-#: ./browser/glyphs_view.py:101
-msgid "Wrong specification of the CSV file. Please correct it and retry."
+#: ./browser/templates/messagebox_listing.pt:25
+msgid "Member information"
 msgstr ""
 
-#: ./content/message.py:52
-msgid "figure data"
-msgstr "图形数据"
+#: ./browser/creat_message.py:64
+msgid "Please correct errors"
+msgstr "请更正下面错误"
+
+#: ./browser/templates/messagebox_listing.pt:34
+#: ./browser/templates/messagebox_view.pt:36
+msgid "date"
+msgstr "日期"
+
+#: ./profiles/default/types/emc.memberArea.inputbox.xml
+msgid "inputbox"
+msgstr "收件箱"
 
 #: ./profiles/default/types/emc.memberArea.message.xml
 msgid "message"
-msgstr ""
+msgstr "消息"
 
 #: ./profiles/default/types/emc.memberArea.message.xml
 msgid "message content type"
-msgstr ""
+msgstr "消息类型"
+
+#: ./profiles/default/types/emc.memberArea.inputbox.xml
+msgid "message inputbox content type"
+msgstr "收件箱内容类型"
+
+#: ./profiles/default/types/emc.memberArea.outputbox.xml
+msgid "message outputbox content type"
+msgstr "发件箱内容类型"
+
+#: ./content/message.py:23
+msgid "message text"
+msgstr "消息正文"
+
+#: ./content/message.py:38
+msgid "message text must be smaller than 128KB"
+msgstr "消息正文必须小于128KB"
 
 #: ./profiles/default/types/emc.memberArea.messagebox.xml
 msgid "messagebox"
-msgstr ""
+msgstr "信箱"
 
 #: ./profiles/default/types/emc.memberArea.messagebox.xml
 msgid "messagebox content type"
-msgstr ""
+msgstr "信箱内容类型"
 
-#: ./content/message.py:45
-#: ./content/messagebox.py:45
-msgid "standard description"
-msgstr "标准描述"
+#: ./browser/templates/messagebox_listing.pt:32
+#: ./browser/templates/messagebox_view.pt:34
+msgid "name"
+msgstr "标题"
 
-#: ./content/message.py:41
-#: ./content/messagebox.py:41
-msgid "standard name"
-msgstr "标准名称"
+#: ./browser/templates/messagebox_listing.pt:36
+#: ./browser/templates/messagebox_view.pt:38
+msgid "operates"
+msgstr "操作"
+
+#: ./profiles/default/types/emc.memberArea.outputbox.xml
+msgid "outputbox"
+msgstr "发件箱"
+
+#: ./browser/templates/messagebox_view.pt:27
+msgid "personal message box information"
+msgstr "个人邮箱信息"
+
+#: ./browser/creat_message.py:35
+msgid "send message to member"
+msgstr "发送消息到会员"
+
+#: ./content/message.py:27
+msgid "send to"
+msgstr "发送给"
+
+#: ./browser/templates/messagebox_listing.pt:33
+#: ./browser/templates/messagebox_view.pt:35
+msgid "sender"
+msgstr "发送者"
+
+#: ./content/message.py:18
+msgid "site message title"
+msgstr "消息标题"
+
+#: ./browser/templates/messagebox_listing.pt:35
+#: ./browser/templates/messagebox_view.pt:37
+msgid "status"
+msgstr "状态"
 

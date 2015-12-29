@@ -1,6 +1,6 @@
 #-*- coding: UTF-8 -*-
 from Products.CMFCore.utils import getToolByName
-from emc.bokeh.testing import FUNCTIONAL_TESTING 
+from emc.memberArea.testing import FUNCTIONAL_TESTING 
 
 from plone.app.testing import TEST_USER_ID, login, TEST_USER_NAME, \
     TEST_USER_PASSWORD, setRoles
@@ -22,31 +22,124 @@ class TestView(unittest.TestCase):
         portal = self.layer['portal']
         setRoles(portal, TEST_USER_ID, ('Manager',))
 
-        portal.invokeFactory('emc.bokeh.fearture', 'fearture1',
-                            title="fearture1",description="demo fearture")     
-            
-        self.portal = portal     
+        portal.invokeFactory('emc.memberArea.messagebox', 'folder1')
+        portal.invokeFactory('emc.memberArea.myfolder', 'my1')
+        portal.invokeFactory('emc.memberArea.todo', 'to1',title="todo items")        
+        portal['folder1'].invokeFactory('emc.memberArea.inputbox', 'input1')
+        portal['folder1'].invokeFactory('emc.memberArea.outputbox', 'output1')
+        portal['folder1']['input1'].invokeFactory('emc.memberArea.message', 'message1')
+        portal['folder1']['output1'].invokeFactory('emc.memberArea.message', 'message1')        
+             
 
-        
-    def test_view(self):
+        self.portal = portal   
+
+    def test_myfolder_view(self):
 
         app = self.layer['app']
-        portal = self.layer['portal']
-       
+        portal = self.layer['portal']       
         browser = Browser(app)
         browser.handleErrors = False
         browser.addHeader('Authorization', 'Basic %s:%s' % (TEST_USER_NAME, TEST_USER_PASSWORD,))
         
         import transaction
         transaction.commit()
-        obj = portal.absolute_url() + '/fearture1'        
-        page = obj + '/@@fview'
+        obj = portal['my1'].absolute_url()       
+        page = obj + '/folder_contents'
 #        import pdb
 #        pdb.set_trace()
         browser.open(page)
-
-        outstr = '<section class="plot">'
-
-        
+        outstr = 'class="pat-structure"'
+#         import pdb
+#         pdb.set_trace()        
         self.assertTrue(outstr in browser.contents)
         
+    def test_message_view(self):
+
+        app = self.layer['app']
+        portal = self.layer['portal']       
+        browser = Browser(app)
+        browser.handleErrors = False
+        browser.addHeader('Authorization', 'Basic %s:%s' % (TEST_USER_NAME, TEST_USER_PASSWORD,))
+        
+        import transaction
+        transaction.commit()
+        obj = portal['folder1']['output1']['message1'].absolute_url()       
+        page = obj + '/@@view'
+#        import pdb
+#        pdb.set_trace()
+        browser.open(page)
+        outstr = '<section id="content-core">'        
+        self.assertTrue(outstr in browser.contents)
+
+    def test_inputbox_view(self):        
+        app = self.layer['app']
+        portal = self.layer['portal']       
+        browser = Browser(app)
+        browser.handleErrors = False
+        browser.addHeader('Authorization', 'Basic %s:%s' % (TEST_USER_NAME, TEST_USER_PASSWORD,))
+        
+        import transaction
+        transaction.commit()
+        obj = portal['folder1']['input1'].absolute_url()       
+        page = obj + '/@@view'
+#        import pdb
+#        pdb.set_trace()
+        browser.open(page)
+        outstr = '<i class="icon-trash icon-white">'        
+        self.assertTrue(outstr in browser.contents)
+        
+    def test_outputbox_view(self):        
+        app = self.layer['app']
+        portal = self.layer['portal']       
+        browser = Browser(app)
+        browser.handleErrors = False
+        browser.addHeader('Authorization', 'Basic %s:%s' % (TEST_USER_NAME, TEST_USER_PASSWORD,))
+        
+        import transaction
+        transaction.commit()
+        obj = portal['folder1']['input1'].absolute_url()       
+        page = obj + '/@@view'
+#        import pdb
+#        pdb.set_trace()
+        browser.open(page)
+        outstr = '<i class="icon-trash icon-white">'        
+        self.assertTrue(outstr in browser.contents)
+        
+    def test_list_view(self):        
+        app = self.layer['app']
+        portal = self.layer['portal']       
+        browser = Browser(app)
+        browser.handleErrors = False
+        browser.addHeader('Authorization', 'Basic %s:%s' % (TEST_USER_NAME, TEST_USER_PASSWORD,))
+        
+        import transaction
+        transaction.commit()
+        obj = portal['folder1'].absolute_url()       
+        page = obj + '/@@ajax_view'
+#        import pdb
+#        pdb.set_trace()
+        browser.open(page)
+        outstr = '<div class="text-center page-header">'        
+        self.assertTrue(outstr in browser.contents)        
+         
+    def test_sendmessage_view(self):        
+        app = self.layer['app']
+        portal = self.layer['portal']       
+        browser = Browser(app)
+        browser.handleErrors = False
+        browser.addHeader('Authorization', 'Basic %s:%s' % (TEST_USER_NAME, TEST_USER_PASSWORD,))
+        
+        import transaction
+        transaction.commit()
+        from emc.memberArea.content.outputbox import IOutputbox
+        obj = portal['folder1']['output1'] 
+        self.assertTrue(IOutputbox.providedBy(obj))
+#         import pdb
+#         pdb.set_trace()
+#          
+#         page = obj.absolute_url()  + '/@@write_message'
+# #        import pdb
+# #        pdb.set_trace()
+#         browser.open(page)
+#         outstr = "send message to member"        
+#         self.assertTrue(outstr in browser.contents)               

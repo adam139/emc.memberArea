@@ -1,5 +1,7 @@
 #-*- coding: UTF-8 -*-
 from five import grok
+
+
 from zope.component import getMultiAdapter
 from zope.component.hooks import getSite
 from zope.globalrequest import getRequest
@@ -15,7 +17,8 @@ from Products.CMFPlone import PloneMessageFactory as _p
 from plone.dexterity.utils import createContentInContainer
 from plone.directives import form
 from zope.event import notify
-from zope.lifecycleevent import ObjectCreatedEvent
+
+from emc.memberArea.events import  MessageCreatedEvent
 from emc.memberArea.content.inputbox import IInputbox
 from emc.memberArea.content.outputbox import IOutputbox
 from emc.memberArea.content.message import IMessage
@@ -24,7 +27,7 @@ from emc.theme.interfaces import IThemeSpecific
 
 class RegistrationForm(form.SchemaForm):
     grok.name('write_message')
-    grok.context(IInputbox)
+    grok.context(IOutputbox)
     grok.require("zope.Public")
     grok.layer(IThemeSpecific)    
     schema = IMessage
@@ -40,11 +43,10 @@ class RegistrationForm(form.SchemaForm):
 #        self.widgets['privacy'].label = u''        
 #        self.widgets['privacy'].mode = 'display'
 #        self.widgets['privacy'].autoresize = True
-        self.widgets['email'].addClass("form-control")
         self.widgets['title'].addClass("form-control")
-        self.widgets['orgname'].addClass("form-control")                        
-        self.widgets['captcha'].addClass("form-control")        
-#        self.widgets['agree'].addClass("checkbox")
+        self.widgets['description'].addClass("form-control")
+        self.widgets['sendto'].addClass("form-control")                        
+
     
     def updateActions(self):
 
@@ -53,7 +55,9 @@ class RegistrationForm(form.SchemaForm):
         self.actions['cancel'].addClass("btn-default btn-block btn-lg")       
     
     @button.buttonAndHandler(_p(u"submit"))
-    def submit(self, action):        
+    def submit(self, action):
+        from plone import api
+        current = api.user.get_current()        
         data, errors = self.extractData() 
 
         if errors:
@@ -61,7 +65,8 @@ class RegistrationForm(form.SchemaForm):
             return       
         # a simple rule for composing object id
         inc = str(int(getattr(self.context, 'registrant_increment', '0')) + 1)
-        data['id'] = '%s' % inc
+        
+        data['id'] = '%s_%s' % (current.id,inc)
         self.context.registrant_increment = inc
         obj = _createObjectByType("emc.memberArea.message",self.context, data['id'])
 
@@ -73,12 +78,13 @@ class RegistrationForm(form.SchemaForm):
         obj.reindexObject()
         # notify object created event,
         #the subscriber of the event will be put message into incoming box of the receivers.
-        notify(ObjectCreatedEvent(obj,IMessage))
+
+        notify(MessageCreatedEvent(obj))
         
 #        urltool = getToolByName(self.context, 'portal_url')
 #        portal = urltool.getPortalObject()
 #        self.request.response.redirect(portal.absolute_url() + "/login_form")
-#         self.request.response.redirect(self.context.absolute_url())
+        self.request.response.redirect(self.context.absolute_url())
         IStatusMessage(self.request).addStatusMessage(
                         _p(u'create_message_succesful',
                           default=u"Your message:${title} has been sent.",

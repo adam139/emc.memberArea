@@ -1,22 +1,22 @@
 <?xml version="1.0"?>
-<object name="emc.memberArea.outputbox"
+<object name="emc.memberArea.todo"
    meta_type="Dexterity FTI"
    i18n:domain="emc.memberArea" xmlns:i18n="http://xml.zope.org/namespaces/i18n">
 
   <!-- Basic metadata -->
-  <property name="title" i18n:translate="">outputbox</property>
+  <property name="title" i18n:translate="">todo</property>
   <property name="description"
-    i18n:translate="">message outputbox content type</property>
-<property name="icon_expr">string:${portal_url}/++resource++emc.memberArea/images/inbox.png</property>
-  <property name="global_allow">False</property>
+    i18n:translate="">todo content type</property>
+<property name="icon_expr">string:${portal_url}/++resource++emc.memberArea/images/folder.png</property>
+  <property name="global_allow">True</property>
   <property name="filter_content_types">True</property>  
   <property name="allowed_content_types">
-  	 <element value="emc.memberArea.message" />  
+   	   
   </property>
   <property name="allow_discussion">False</property>
 
  <!-- schema interface FIXME: this is ugly -->
- <property name="schema">emc.memberArea.content.outputbox.IOutputbox</property> 
+ <property name="schema">emc.memberArea.content.todo.ITodo</property> 
 
  <!-- class used for content items -->
  <property name="klass">plone.dexterity.content.Container</property>

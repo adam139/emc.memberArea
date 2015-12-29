@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2015-12-13 08:24+0000\n"
+"POT-Creation-Date: 2015-12-27 04:57+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -14,16 +14,21 @@ msgstr ""
 "Preferred-Encodings: utf-8 latin1\n"
 "Domain: DOMAIN\n"
 
-#: ./content/message.py:53
-msgid "Attach your figure data report file(csv format)."
+#: ./browser/templates/messagebox_listing.pt:25
+msgid "Member information"
 msgstr ""
 
-#: ./browser/glyphs_view.py:101
-msgid "Wrong specification of the CSV file. Please correct it and retry."
+#: ./browser/creat_message.py:64
+msgid "Please correct errors"
 msgstr ""
 
-#: ./content/message.py:52
-msgid "figure data"
+#: ./browser/templates/messagebox_listing.pt:34
+#: ./browser/templates/messagebox_view.pt:36
+msgid "date"
+msgstr ""
+
+#: ./profiles/default/types/emc.memberArea.inputbox.xml
+msgid "inputbox"
 msgstr ""
 
 #: ./profiles/default/types/emc.memberArea.message.xml
@@ -34,6 +39,22 @@ msgstr ""
 msgid "message content type"
 msgstr ""
 
+#: ./profiles/default/types/emc.memberArea.inputbox.xml
+msgid "message inputbox content type"
+msgstr ""
+
+#: ./profiles/default/types/emc.memberArea.outputbox.xml
+msgid "message outputbox content type"
+msgstr ""
+
+#: ./content/message.py:23
+msgid "message text"
+msgstr ""
+
+#: ./content/message.py:38
+msgid "message text must be smaller than 128KB"
+msgstr ""
+
 #: ./profiles/default/types/emc.memberArea.messagebox.xml
 msgid "messagebox"
 msgstr ""
@@ -42,13 +63,43 @@ msgstr ""
 msgid "messagebox content type"
 msgstr ""
 
-#: ./content/message.py:45
-#: ./content/messagebox.py:45
-msgid "standard description"
+#: ./browser/templates/messagebox_listing.pt:32
+#: ./browser/templates/messagebox_view.pt:34
+msgid "name"
 msgstr ""
 
-#: ./content/message.py:41
-#: ./content/messagebox.py:41
-msgid "standard name"
+#: ./browser/templates/messagebox_listing.pt:36
+#: ./browser/templates/messagebox_view.pt:38
+msgid "operates"
+msgstr ""
+
+#: ./profiles/default/types/emc.memberArea.outputbox.xml
+msgid "outputbox"
+msgstr ""
+
+#: ./browser/templates/messagebox_view.pt:27
+msgid "personal message box information"
+msgstr ""
+
+#: ./browser/creat_message.py:35
+msgid "send message to member"
+msgstr ""
+
+#: ./content/message.py:27
+msgid "send to"
+msgstr ""
+
+#: ./browser/templates/messagebox_listing.pt:33
+#: ./browser/templates/messagebox_view.pt:35
+msgid "sender"
+msgstr ""
+
+#: ./content/message.py:18
+msgid "site message title"
+msgstr ""
+
+#: ./browser/templates/messagebox_listing.pt:35
+#: ./browser/templates/messagebox_view.pt:37
+msgid "status"
 msgstr ""
 
