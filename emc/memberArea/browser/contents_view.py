@@ -2,6 +2,7 @@
 from five import grok
 from z3c.form import field
 import json
+from zope.event import notify
 from Acquisition import aq_inner
 from Acquisition import aq_parent
 from zope.component import getMultiAdapter
@@ -14,7 +15,10 @@ from plone.memoize.instance import memoize
 from emc.memberArea.content.messagebox import IMessagebox
 from emc.memberArea.content.message import IMessage
 from emc.memberArea.content.todo import ITodo
+from emc.memberArea.content.favorite import IFavorite
 from emc.theme.interfaces import IThemeSpecific
+
+from emc.memberArea.events import FavoriteEvent,UnFavoriteEvent
 
 
 from emc.memberArea import _
@@ -28,9 +32,6 @@ class BaseView(grok.View):
     grok.name('baseview')
     grok.require('zope2.View')
     
-
-#     def render(self):
-#         return "This is base view "
     
     @memoize    
     def catalog(self):
@@ -83,26 +84,6 @@ class MessageboxView(BaseView):
                                               b_size=size)            
         return self.outputList(braindata)
     
-#     def getMemberList(self):
-#         """获取会员列表,this has been stoped"""
-#         mlist = []
-#         memberbrains = self.getMessagebrains()                   
-# 
-#         for brain in memberbrains:           
-#             row = {'id':'', 'name':'',  'url':'','sender':'',
-#                     'register_date':'', 'status':'', 'editurl':'',
-#                     'delurl':''}
-#             row['id'] = brain.id
-#             row['name'] = brain.Title
-#             id = brain.id               
-#             row['url'] = brain.getURL()
-#             row['sender'] = brain.Creator
-#             row['register_date'] = brain.created.strftime('%Y-%m-%d')
-#             row['status'] = brain.review_state
-#             row['editurl'] = row['url'] + '/@@edit-baseinfo'
-#             row['delurl'] = row['url'] + '/delete_confirmation'            
-#             mlist.append(row)
-#         return mlist          
     
     def outputList(self,braindata):
         """ output brains for template render
@@ -124,11 +105,9 @@ class MessageboxView(BaseView):
             name = i.Title # message object's title
             sender = i.Creator
             register_date = i.created.strftime('%Y-%m-%d')
-            status = i.review_state              
-                
+            status = i.review_state                             
 
-            delurl = "%s/delete_confirmation" % objurl
-                        
+            delurl = "%s/delete_confirmation" % objurl                        
             out = """<tr class="row">
                   <td class="col-md-4">
                       <a href="%(url)s">
@@ -143,7 +122,6 @@ class MessageboxView(BaseView):
                                                           name=name,
                                                           sender=sender,
                                                           register_date=register_date)
-                  
 
             if status == "unreaded":
                 out1 =""" 
@@ -197,7 +175,7 @@ class MessageAjaxSearch(grok.View):
     grok.name('message_ajax')
     grok.context(IMessagebox)
     grok.layer(IThemeSpecific)
-    # ajax response view should be called just by manager permission
+    # ajax response view should be called just by manager permission?
     grok.require('cmf.ManagePortal')
           
     def render(self):
@@ -237,6 +215,15 @@ class TodoListView(MessageboxView):
      grok.name('view')
      grok.require('zope2.View')
      
+     @memoize    
+     def allitems(self):
+        """fetch all messages"""               
+        messagebrains = self.catalog()(review_status='pending', 
+                                path="/".join(self.context.getPhysicalPath()),
+                                              sort_order="reverse",
+                                              sort_on="created")       
+        return messagebrains     
+
      def getMessagebrains(self,start=0,size=0):
         "return messags data"
 
@@ -245,7 +232,7 @@ class TodoListView(MessageboxView):
         if size==0:
             braindata = self.allitems()
         else:
-            braindata = self.catalog()(object_provides=IMessage.__identifier__,                                
+            braindata = self.catalog()(review_status='pending',                                
                                               sort_order="reverse",
                                               sort_on="created",
                                               b_start= start,
@@ -285,7 +272,81 @@ class TodoListView(MessageboxView):
          
             outhtml = "%s%s" %(outhtml,out)
         return outhtml
-        
+
+class FavoriteListView(MessageboxView):
+     "emc memberArea todo listing view"
+     
+     grok.context(IFavorite)
+     grok.template('myfavoritefolder')
+     grok.name('view')
+     grok.require('zope2.View')
+     
+     def getFavoriteItemsId(self):
+
+         userobject = self.pm().getAuthenticatedMember()
+         userid = userobject.getId()
+         fav = self.pm().getHomeFolder(userid)['favorite']
+         favoritelist = list(fav.getattr('myfavorite',[]))
+         return favoritelist         
+     
+     @memoize    
+     def allitems(self):
+        """fetch all messages"""
+                     
+        messagebrains = self.catalog()({
+                     'id': self.getFavoriteItemsId(),
+                     'sort_order': 'reverse',
+                     'sort_on': 'modified'})      
+        return messagebrains     
+
+     def getMessagebrains(self,start=0,size=0):
+        "return messags data"
+
+        from plone import api
+        current = api.user.get_current()
+        if size==0:
+            braindata = self.allitems()
+        else:
+            braindata = self.catalog()({
+                                 'id': self.getFavoriteItemsId(),
+                                 'sort_order': 'reverse',
+                                 'sort_on': 'modified',
+                                 'b_start': start,
+                                 'b_size': size})            
+        return self.outputList(braindata)     
+          
+     def outputList(self,braindata):
+        """ output brains for template render
+        """
+        outhtml = ""
+        brainnum = len(braindata)
+        obj = self.context
+      
+        for i in braindata:
+            objurl =  i.getURL()           
+            id = i.id            
+            name = i.Title # message object's title
+            descripton = i.Description
+            sender = i.Creator
+            register_date = i.created.strftime('%Y-%m-%d')
+#             status = i.review_state                          
+                        
+            out = """<tr class="row">
+                  <td class="col-md-8">
+                      <a href="%(url)s">
+                         <span>%(name)s</span>
+                      </a>
+                  </td>                
+                  <td class="col-md-2 text-left">%(register_date)s
+                  </td>
+                  <td class="col-md-2 unfavorite" rel="%(id)s data-ajax-target="%(url)s">
+                  <a href="#" class="link-overlay btn btn-danger">
+                                      <i class="icon-trash icon-white"></i>删除</a>
+                  </td>""" % dict(url=objurl,name=name,id=id,register_date=register_date)                 
+                                     
+         
+            outhtml = "%s%s" %(outhtml,out)
+        return outhtml        
        
 class MessageMore(grok.View):
     """message list view AJAX action for click more. default batch size is 10.
@@ -334,12 +395,10 @@ class MessageState(grok.View):
                        'path':"/".join(self.context.getPhysicalPath()), 
                        "id":id})[0].getObject()        
         portal_workflow = getToolByName(self.context, 'portal_workflow')
-
 # obj current status        
         if state == "unreaded" : # this is a new account
             try:
-                portal_workflow.doActionFor(obj, 'done')
-                   
+                portal_workflow.doActionFor(obj, 'done')                   
                 result = True
             except:
                 result = False
@@ -350,8 +409,7 @@ class MessageState(grok.View):
             except:
                 result = False
         else:
-            result = False
-         
+            result = False         
         obj.reindexObject()
         self.request.response.setHeader('Content-Type', 'application/json')
         return json.dumps(result)                          
@@ -363,6 +421,24 @@ class MessageView(BaseView):
     grok.name('view')
     grok.require('zope2.View')  
  
-
+class FavoriteAjax(grok.View):
+    "receive front ajax data,trigle UnFavoriteEvent"
+    grok.context(IFavorite)
+    grok.name('ajax')
+    grok.layer(IThemeSpecific)
+    grok.require('zope2.View')
+    
+    def render(self):
+        data = self.request.form
+        id = data['id']      
+        catalog = getToolByName(self.context, 'portal_catalog')
+        obj = catalog({"id":id})[0].getObject()
+        try:
+            notify(UnFavoriteEvent(obj))
+            result = True
+        except:
+            result = False           
+        self.request.response.setHeader('Content-Type', 'application/json')
+        return json.dumps(result)
  
         

@@ -7,7 +7,7 @@
   <property name="title" i18n:translate="">inputbox</property>
   <property name="description"
     i18n:translate="">message inputbox content type</property>
-  <property name="icon_expr">string:${portal_url}/++resource++emc.memberArea/images/inbox.png</property>
+  <property name="content_icon">++resource++emc.memberArea/images/inbox.png</property>
   <property name="global_allow">False</property>
   <property name="filter_content_types">True</property>  
   <property name="allowed_content_types">

@@ -30,10 +30,13 @@ def create_messagebox(obj,event):
     outputbox.title = u'发件箱'.encode("utf-8")
     id = 'myfolder'
     item = createContentInContainer(fd,"emc.memberArea.myfolder",checkConstraints=False,id=id)
-    item.title = u'个人'.encode("utf-8")
+    item.title = u'个人网盘'.encode("utf-8")
     id = 'todo'
     item = createContentInContainer(fd,"emc.memberArea.todo",checkConstraints=False,id=id)
-    item.title = u'个人'.encode("utf-8")        
+    item.title = u'代办事宜'.encode("utf-8")  
+    id = 'favorite'
+    item = createContentInContainer(fd,"emc.memberArea.favorite",checkConstraints=False,id=id)
+    item.title = u'我的收藏'.encode("utf-8")           
 
 def get_personal_inputbox_byid(obj,id):
     pm = getToolByName(obj,'portal_membership')

@@ -1,0 +1,35 @@
+<tal:snippet omit-tag="">
+  <div class="favoriting">
+  		<div id="ajaxreq" class="hiddenStructure" 
+			tal:attributes="data-ajax-target python:context.absolute_url()"></div>
+    <div class="text-center" id="current_favoriting" tal:condition="view/has_favorites">
+      当前收藏这个内容的用户有<span tal:content="view/number">200</span>个。
+    </div>
+    <div id="alreadyfavorited" tal:condition="view/favorited" class="favoriting_option">
+      你已经收藏了这个内容！
+      <div class="text-right"><span>取消收藏</span>
+      </div>
+    </div>
+    <div id="notyetfavorited" class="favoriting_option"
+            tal:condition="python:view.can_favorite and not(view.favorited())">
+      你是否收藏该内容？
+      <div class="text-right"><span>收藏</span>
+      </div>
+    </div>
+  </div>
+  <script type="text/javascript">
+    // JQuery standard mechanism. Only execute the code after the page
+    // finished loading.
+    $(document).ready(function(){
+    $(#alreadyfavorited).click(function () {
+            $.post($("#ajaxreq").attr("data-ajax-target") + "/undofavorite", function () {
+                location.reload();
+            });
+    $(#notyetfavorited).click(function () {
+            $.post($("#ajaxreq").attr("data-ajax-target") + "/dofavorite", function () {
+                location.reload();
+            });            
+
+    });
+  </script>
+</tal:snippet>

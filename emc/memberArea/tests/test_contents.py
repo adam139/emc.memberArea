@@ -13,12 +13,12 @@ class Allcontents(unittest.TestCase):
 
         portal.invokeFactory('emc.memberArea.messagebox', 'folder1')
         portal.invokeFactory('emc.memberArea.myfolder', 'my1')
-        portal.invokeFactory('emc.memberArea.todo', 'to1',title="todo items")        
+        portal.invokeFactory('emc.memberArea.todo', 'to1',title="todo items")
+        portal.invokeFactory('emc.memberArea.favorite', 'fa1',title="favorite items")                
         portal['folder1'].invokeFactory('emc.memberArea.inputbox', 'input1')
         portal['folder1'].invokeFactory('emc.memberArea.outputbox', 'output1')
         portal['folder1']['input1'].invokeFactory('emc.memberArea.message', 'message1')
-        portal['folder1']['output1'].invokeFactory('emc.memberArea.message', 'message1')          
-             
+        portal['folder1']['output1'].invokeFactory('emc.memberArea.message', 'message1')                      
 
         self.portal = portal
     
@@ -26,8 +26,7 @@ class Allcontents(unittest.TestCase):
         self.assertEqual(self.portal['folder1'].id,'folder1')
         self.assertEqual(self.portal['my1'].id,'my1')
         self.assertEqual(self.portal['to1'].id,'to1')
-        import pdb
-        pdb.set_trace()        
+        self.assertEqual(self.portal['fa1'].id,'fa1')       
         self.assertEqual(self.portal['folder1']['input1'].id,'input1') 
         self.assertEqual(self.portal['folder1']['output1'].id,'output1')                
         self.assertEqual(self.portal['folder1']['input1']['message1'].id,'message1') 
@@ -39,7 +38,8 @@ class Allcontents(unittest.TestCase):
         from emc.memberArea.content.inputbox import IInputbox
         from emc.memberArea.content.outputbox import IOutputbox
         from emc.memberArea.content.myfolder import IMyfolder
-        from emc.memberArea.content.todo import ITodo                        
+        from emc.memberArea.content.todo import ITodo
+        from emc.memberArea.content.favorite import IFavorite                                
         self.assertTrue(IMessagebox.providedBy(self.portal['folder1']['input1']))
         self.assertTrue(IInputbox.providedBy(self.portal['folder1']['input1']))
         self.assertFalse(IMessagebox.implementedBy(self.portal['folder1']['input1']))                

@@ -13,6 +13,29 @@
 
   <i18n:registerTranslations directory="locales" />
 
+  <permission
+      id="emc.memberArea.view_favorite"
+      title="emc.memberArea:View favorite"
+      />
+
+  <permission
+      id="emc.memberArea.do_favorite"
+      title="emc.memberArea:Do favorite"
+      />
+<!-- send message inner site -->
+  <permission
+      id="emc.memberArea.view_message"
+      title="emc.memberArea:View message"
+      />       
+  <permission
+      id="emc.memberArea.send_message"
+      title="emc.memberArea:Send message"
+      />
+  <permission
+      id="emc.memberArea.modify_message"
+      title="emc.memberArea:Modify message"
+      />      
+      
   <genericsetup:registerProfile
       name="default"
       title="emc.memberArea"
@@ -21,5 +44,6 @@
       provides="Products.GenericSetup.interfaces.EXTENSION"
       />
   <!-- -*- extra stuff goes here -*- -->
-   <include package=".browser" />  
+   <include package=".browser" />
+   <include package=".behavior" />     
 </configure>

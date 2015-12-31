@@ -24,14 +24,34 @@ class TestView(unittest.TestCase):
 
         portal.invokeFactory('emc.memberArea.messagebox', 'folder1')
         portal.invokeFactory('emc.memberArea.myfolder', 'my1')
-        portal.invokeFactory('emc.memberArea.todo', 'to1',title="todo items")        
+        portal.invokeFactory('emc.memberArea.todo', 'to1',title="todo items")
+        portal.invokeFactory('emc.memberArea.favorite', 'fa1',title="favorite items")                
         portal['folder1'].invokeFactory('emc.memberArea.inputbox', 'input1')
         portal['folder1'].invokeFactory('emc.memberArea.outputbox', 'output1')
         portal['folder1']['input1'].invokeFactory('emc.memberArea.message', 'message1')
-        portal['folder1']['output1'].invokeFactory('emc.memberArea.message', 'message1')        
-             
+        portal['folder1']['output1'].invokeFactory('emc.memberArea.message', 'message1')                      
 
         self.portal = portal   
+
+    def test_myfolder_view(self):
+
+        app = self.layer['app']
+        portal = self.layer['portal']       
+        browser = Browser(app)
+        browser.handleErrors = False
+        browser.addHeader('Authorization', 'Basic %s:%s' % (TEST_USER_NAME, TEST_USER_PASSWORD,))
+        
+        import transaction
+        transaction.commit()
+        obj = portal['to1'].absolute_url()       
+        page = obj + '/@@view'
+#        import pdb
+#        pdb.set_trace()
+        browser.open(page)
+        outstr = '<th class="col-md-4" i18n:translate="">name</th>'
+#         import pdb
+#         pdb.set_trace()        
+        self.assertTrue(outstr in browser.contents)
 
     def test_myfolder_view(self):
 
@@ -120,7 +140,24 @@ class TestView(unittest.TestCase):
 #        pdb.set_trace()
         browser.open(page)
         outstr = '<div class="text-center page-header">'        
-        self.assertTrue(outstr in browser.contents)        
+        self.assertTrue(outstr in browser.contents)
+        
+    def test_favorite_view(self):        
+        app = self.layer['app']
+        portal = self.layer['portal']       
+        browser = Browser(app)
+        browser.handleErrors = False
+        browser.addHeader('Authorization', 'Basic %s:%s' % (TEST_USER_NAME, TEST_USER_PASSWORD,))
+        
+        import transaction
+        transaction.commit()
+        obj = portal['fa1'].absolute_url()       
+        page = obj + '/@@view'
+#        import pdb
+#        pdb.set_trace()
+        browser.open(page)
+        outstr = '<div class="page-header">'        
+        self.assertTrue(outstr in browser.contents)                
          
     def test_sendmessage_view(self):        
         app = self.layer['app']

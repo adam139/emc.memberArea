@@ -1,7 +1,5 @@
 #-*- coding: UTF-8 -*-
 from five import grok
-
-
 from zope.component import getMultiAdapter
 from zope.component.hooks import getSite
 from zope.globalrequest import getRequest
