@@ -10,9 +10,9 @@ from Products.CMFCore.utils import getToolByName
 
 FAVORITE_KEY = 'emc.memberArea.favorite'
 
-class Favorite(object):
-#     grok.provides(IFavoriteAdapter)
-#     grok.context(IDexterityContent)
+class Answer(grok.Adapter):
+    grok.provides(IFavoriteAdapter)
+    grok.context(IDexterityContent)
     
     def __init__(self, context):
         self.context = context
@@ -47,10 +47,14 @@ class Favorite(object):
         else:
            raise KeyError("The %s is not concerned about" % userToken)
         
-
+def get_personal_favorite_byid(obj,id):
+    pm = getToolByName(obj,'portal_membership')
+    hf = pm.getHomeFolder(id)
+    box = hf['favorite']  
+    return box
         
 @grok.subscribe(IDexterityContent, IFavoriteEvent)
-def DoFavorite(obj,event):
+def Favorite(obj,event):
     """add the obj to my favorite"""
     
     mp = getToolByName(obj,'portal_membership')
@@ -87,14 +91,8 @@ def UnFavoriteAnswer(obj,event):
         
 @grok.subscribe(IDexterityContent, IObjectRemovedEvent)
 def delFavorite(obj,event):
-        
-    """判断当前答案是否被收藏，当对象被删除时，收藏也应删除"""    
-    
-    try:
-        ada = IFavoriteAdapter(obj)
-    except:
-        return
-
+    ada = IFavoriteAdapter(obj)
+    """判断当前答案是否被收藏，当对象被删除时，收藏也应删除"""
     useridlist = ada.favorite
     if len(useridlist) == 0:
         return

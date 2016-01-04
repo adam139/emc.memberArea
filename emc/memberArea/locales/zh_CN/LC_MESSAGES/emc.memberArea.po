@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: emc bokeh\n"
-"POT-Creation-Date: 2015-12-27 04:57+0000\n"
-"PO-Revision-Date: 2015-12-26 20:13+0800\n"
+"POT-Creation-Date: 2016-01-04 12:22+0000\n"
+"PO-Revision-Date: 2016-01-04 20:29+0800\n"
 "Last-Translator: adam <yuejun.tang@gmail.com>\n"
 "Language-Team: LANGUAGE <yuejun.tang@gmail.com>\n"
 "MIME-Version: 1.0\n"
@@ -15,18 +15,27 @@ msgstr ""
 "Domain: my315ok.socialorgnization\n"
 "X-Poedit-Language: Chinese\n"
 
-#: ./browser/templates/messagebox_listing.pt:25
-msgid "Member information"
-msgstr ""
-
-#: ./browser/creat_message.py:64
+#: ./browser/creat_message.py:62
 msgid "Please correct errors"
 msgstr "请更正下面错误"
 
-#: ./browser/templates/messagebox_listing.pt:34
+#: ./browser/templates/messagebox_listing.pt:42
 #: ./browser/templates/messagebox_view.pt:36
+#: ./browser/templates/myfavoritefolder.pt:31
 msgid "date"
 msgstr "日期"
+
+#: ./browser/templates/todo_listing.pt:33
+msgid "description"
+msgstr "描述"
+
+#: ./profiles/default/types/emc.memberArea.favorite.xml
+msgid "favorite"
+msgstr "收藏夹"
+
+#: ./profiles/default/types/emc.memberArea.favorite.xml
+msgid "favorite content type"
+msgstr "收藏夹类型"
 
 #: ./profiles/default/types/emc.memberArea.inputbox.xml
 msgid "inputbox"
@@ -64,13 +73,23 @@ msgstr "信箱"
 msgid "messagebox content type"
 msgstr "信箱内容类型"
 
-#: ./browser/templates/messagebox_listing.pt:32
+#: ./profiles/default/types/emc.memberArea.myfolder.xml
+msgid "myfolder"
+msgstr "个人网盘"
+
+#: ./profiles/default/types/emc.memberArea.myfolder.xml
+msgid "myfolder content type"
+msgstr "网盘类型"
+
+#: ./browser/templates/messagebox_listing.pt:40
 #: ./browser/templates/messagebox_view.pt:34
+#: ./browser/templates/myfavoritefolder.pt:30
 msgid "name"
 msgstr "标题"
 
-#: ./browser/templates/messagebox_listing.pt:36
+#: ./browser/templates/messagebox_listing.pt:44
 #: ./browser/templates/messagebox_view.pt:38
+#: ./browser/templates/myfavoritefolder.pt:32
 msgid "operates"
 msgstr "操作"
 
@@ -78,11 +97,20 @@ msgstr "操作"
 msgid "outputbox"
 msgstr "发件箱"
 
+#: ./browser/templates/myfavoritefolder.pt:24
+msgid "personal favorite information"
+msgstr "我的收藏夹信息"
+
+#: ./browser/templates/messagebox_listing.pt:34
 #: ./browser/templates/messagebox_view.pt:27
 msgid "personal message box information"
 msgstr "个人邮箱信息"
 
-#: ./browser/creat_message.py:35
+#: ./browser/templates/todo_listing.pt:25
+msgid "personal undo information"
+msgstr "个人待办事宜"
+
+#: ./browser/creat_message.py:33
 msgid "send message to member"
 msgstr "发送消息到会员"
 
@@ -90,7 +118,7 @@ msgstr "发送消息到会员"
 msgid "send to"
 msgstr "发送给"
 
-#: ./browser/templates/messagebox_listing.pt:33
+#: ./browser/templates/messagebox_listing.pt:41
 #: ./browser/templates/messagebox_view.pt:35
 msgid "sender"
 msgstr "发送者"
@@ -99,8 +127,16 @@ msgstr "发送者"
 msgid "site message title"
 msgstr "消息标题"
 
-#: ./browser/templates/messagebox_listing.pt:35
+#: ./browser/templates/messagebox_listing.pt:43
 #: ./browser/templates/messagebox_view.pt:37
 msgid "status"
 msgstr "状态"
+
+#: ./profiles/default/types/emc.memberArea.todo.xml
+msgid "todo"
+msgstr "待办事宜"
+
+#: ./profiles/default/types/emc.memberArea.todo.xml
+msgid "todo content type"
+msgstr "待办事宜类型"
 

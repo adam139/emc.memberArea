@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2015-12-27 04:57+0000\n"
+"POT-Creation-Date: 2016-01-04 12:22+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -14,17 +14,26 @@ msgstr ""
 "Preferred-Encodings: utf-8 latin1\n"
 "Domain: DOMAIN\n"
 
-#: ./browser/templates/messagebox_listing.pt:25
-msgid "Member information"
-msgstr ""
-
-#: ./browser/creat_message.py:64
+#: ./browser/creat_message.py:62
 msgid "Please correct errors"
 msgstr ""
 
-#: ./browser/templates/messagebox_listing.pt:34
+#: ./browser/templates/messagebox_listing.pt:42
 #: ./browser/templates/messagebox_view.pt:36
+#: ./browser/templates/myfavoritefolder.pt:31
 msgid "date"
+msgstr ""
+
+#: ./browser/templates/todo_listing.pt:33
+msgid "description"
+msgstr ""
+
+#: ./profiles/default/types/emc.memberArea.favorite.xml
+msgid "favorite"
+msgstr ""
+
+#: ./profiles/default/types/emc.memberArea.favorite.xml
+msgid "favorite content type"
 msgstr ""
 
 #: ./profiles/default/types/emc.memberArea.inputbox.xml
@@ -63,13 +72,23 @@ msgstr ""
 msgid "messagebox content type"
 msgstr ""
 
-#: ./browser/templates/messagebox_listing.pt:32
+#: ./profiles/default/types/emc.memberArea.myfolder.xml
+msgid "myfolder"
+msgstr ""
+
+#: ./profiles/default/types/emc.memberArea.myfolder.xml
+msgid "myfolder content type"
+msgstr ""
+
+#: ./browser/templates/messagebox_listing.pt:40
 #: ./browser/templates/messagebox_view.pt:34
+#: ./browser/templates/myfavoritefolder.pt:30
 msgid "name"
 msgstr ""
 
-#: ./browser/templates/messagebox_listing.pt:36
+#: ./browser/templates/messagebox_listing.pt:44
 #: ./browser/templates/messagebox_view.pt:38
+#: ./browser/templates/myfavoritefolder.pt:32
 msgid "operates"
 msgstr ""
 
@@ -77,11 +96,20 @@ msgstr ""
 msgid "outputbox"
 msgstr ""
 
+#: ./browser/templates/myfavoritefolder.pt:24
+msgid "personal favorite information"
+msgstr ""
+
+#: ./browser/templates/messagebox_listing.pt:34
 #: ./browser/templates/messagebox_view.pt:27
 msgid "personal message box information"
 msgstr ""
 
-#: ./browser/creat_message.py:35
+#: ./browser/templates/todo_listing.pt:25
+msgid "personal undo information"
+msgstr ""
+
+#: ./browser/creat_message.py:33
 msgid "send message to member"
 msgstr ""
 
@@ -89,7 +117,7 @@ msgstr ""
 msgid "send to"
 msgstr ""
 
-#: ./browser/templates/messagebox_listing.pt:33
+#: ./browser/templates/messagebox_listing.pt:41
 #: ./browser/templates/messagebox_view.pt:35
 msgid "sender"
 msgstr ""
@@ -98,8 +126,16 @@ msgstr ""
 msgid "site message title"
 msgstr ""
 
-#: ./browser/templates/messagebox_listing.pt:35
+#: ./browser/templates/messagebox_listing.pt:43
 #: ./browser/templates/messagebox_view.pt:37
 msgid "status"
+msgstr ""
+
+#: ./profiles/default/types/emc.memberArea.todo.xml
+msgid "todo"
+msgstr ""
+
+#: ./profiles/default/types/emc.memberArea.todo.xml
+msgid "todo content type"
 msgstr ""
 

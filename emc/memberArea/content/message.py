@@ -18,8 +18,8 @@ class IMessage(form.Schema):
     title = schema.TextLine(title=_(u"site message title"),
             required=True)
 
-    form.widget(description="plone.app.z3cform.wysiwyg.WysiwygFieldWidget")
-    description = schema.Text(
+    form.widget(text="plone.app.z3cform.wysiwyg.WysiwygFieldWidget")
+    text = schema.Text(
         title=_(u"message text"),
         required=True)
     form.widget(sendto=AutocompleteMultiFieldWidget)    
@@ -28,10 +28,10 @@ class IMessage(form.Schema):
         value_type=schema.Choice(title=_(u"send to"),
                                   source=u"plone.principalsource.Users"),
         required=True,
-#         missing_value=(), # important!
+        missing_value=(), # important!
     )           
 
-@form.validator(field=IMessage['description'])
+@form.validator(field=IMessage['text'])
 def maxSize(value):
     if value is not None:
         if len(value)/1024 > 128:

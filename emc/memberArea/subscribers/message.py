@@ -67,7 +67,7 @@ def dispatch_message(obj,event):
         api.content.copy(source=obj, target=inputbox)
         id = obj.id
 
-        # mark the new obj as unreadet status
+        # mark the new obj as unreaded status
 #         api.content.transition(obj=inputbox[id], transition='undo')
         inputbox[id].reindexObject()
     # recover old sm

@@ -19,6 +19,7 @@ from emc.memberArea.content.favorite import IFavorite
 from emc.theme.interfaces import IThemeSpecific
 
 from emc.memberArea.events import FavoriteEvent,UnFavoriteEvent
+from emc.memberArea import sendMessage
 
 
 from emc.memberArea import _
@@ -47,7 +48,17 @@ class BaseView(grok.View):
             
     @property
     def isEditable(self):
-        return self.pm().checkPermission(permissions.ManagePortal,self.context)    
+        return self.pm().checkPermission(permissions.ManagePortal,self.context)
+    
+    def canbeSend(self):
+        return self.pm().checkPermission(sendMessage,self.context)        
+    
+    def getMessageUrl(self):
+           
+        hf = self.pm().getHomeFolder(self.pm().getAuthenticatedMember().getId())
+        box = hf['messagebox']['outputbox']
+        url = "%s/@@write_message" % box.absolute_url()     
+        return url        
     
 
 class MessageboxView(BaseView):
@@ -61,6 +72,9 @@ class MessageboxView(BaseView):
         # Hide the editable-object border
         self.request.set('disable_border', True)
 
+
+    
+    
     @memoize    
     def allitems(self):
         """fetch all messages"""               
