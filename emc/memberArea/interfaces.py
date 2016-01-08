@@ -23,7 +23,7 @@ class IUnFavoriteEvent(IObjectEvent):
     """pass"""
     
 # Adapter interface for favorite functions
-class IFavoriteAdapter(Interface):
+class IFavoriting(Interface):
 
         
     def number():
@@ -35,6 +35,10 @@ class IFavoriteAdapter(Interface):
     def delfavorite(userToken): 
         """del favorite"""       
 
+class IWorkspace(Interface):
+    """Marker interface for personal root folder,using it define
+    default view for root folder
+    """
 
 class IFavoritableLayer(Interface):
     """Marker interface for the Browserlayer
@@ -44,8 +48,8 @@ class IFavoritableLayer(Interface):
 class IFavoritable(Interface):
     pass
 
-class IFavoriting(Interface):
-    """mark interface"""
+# class IFavoriting(Interface):
+#     """mark interface"""
         
     
  

@@ -62,20 +62,8 @@
 	</script>
 			  <script type="text/javascript">
 $(document).ready(function(){
-$('#tablecontent').on('click','.unfavorite', function(){
-		  var uid = $(this).attr('rel');
-		  var action = $("#ajaxreq").attr('data-ajax-target');
-			var states = {'uid': uid};
-			$(this).removeClass('off').addClass('on');			
-			$.post(action, states, function(result){
-				if (result) {
-				$(this).parent().hide();
-				}
-				else {return false;}
-			}, 'json');
-		
-	});
-		$('[data-toggle="tooltip"]').tooltip() 	
+
+		$('[data-toggle="tooltip"]').tooltip(); 	
 	})
 </script>		
 </metal:js>

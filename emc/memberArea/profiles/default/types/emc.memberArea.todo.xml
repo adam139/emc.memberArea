@@ -8,10 +8,9 @@
   <property name="description"
     i18n:translate="">todo content type</property>
 <property name="content_icon">++resource++emc.memberArea/images/calendar.png</property>
-  <property name="global_allow">True</property>
+  <property name="global_allow">False</property>
   <property name="filter_content_types">True</property>  
-  <property name="allowed_content_types">
-   	   
+  <property name="allowed_content_types">   	   
   </property>
   <property name="allow_discussion">False</property>
 
@@ -25,6 +24,8 @@
  <property name="behaviors">
      <element value="plone.app.content.interfaces.INameFromTitle" />
      <element value="plone.app.dexterity.behaviors.metadata.IBasic"/>
+     <element value="plone.app.contenttypes.behaviors.richtext.IRichText"/>
+  	 <element value="plone.app.dexterity.behaviors.exclfromnav.IExcludeFromNavigation"/>           
  </property>
 
   <!-- View information -->

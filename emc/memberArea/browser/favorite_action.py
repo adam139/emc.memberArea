@@ -6,7 +6,8 @@ from zope.event import notify
 
 class Favorite(BrowserPage):
 
-    def __call__(self, rating):
+    def __call__(self):
+
         notify(FavoriteEvent(self.context))
         return "success"
 

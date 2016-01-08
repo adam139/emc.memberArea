@@ -3,7 +3,7 @@ from plone.app.layout.viewlets import common as base
 from Products.CMFCore.permissions import ViewManagementScreens
 from Products.CMFCore.utils import getToolByName
 from emc.memberArea import DoFavorite
-from emc.memberArea.interfaces import IFavoriteAdapter
+from emc.memberArea.interfaces import IFavoriting
 
 
 class Favorite(base.ViewletBase):
@@ -19,7 +19,8 @@ class Favorite(base.ViewletBase):
         super(Favorite, self).update()
 
         if self.favorite is None:
-            self.favorite = IFavoriteAdapter(self.context)
+            self.favorite = IFavoriting(self.context)
+
         if self.is_manager is None:
             self.pm = getToolByName(self.context, 'portal_membership')
             self.is_manager = self.pm.checkPermission(
@@ -28,6 +29,7 @@ class Favorite(base.ViewletBase):
                 DoFavorite, self.context)
 
     def favorited(self):
+
         userid = self.pm.getAuthenticatedMember().getId()
         return not(self.favorite.favavailable(userid))
 

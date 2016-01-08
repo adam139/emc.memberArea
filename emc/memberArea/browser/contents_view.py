@@ -5,6 +5,7 @@ import json
 from zope.event import notify
 from Acquisition import aq_inner
 from Acquisition import aq_parent
+from zope.interface import Interface 
 from zope.component import getMultiAdapter
 from Products.CMFCore.utils import getToolByName
 from plone.app.layout.navigation.interfaces import INavigationRoot
@@ -13,9 +14,11 @@ from zope.interface import Interface
 from plone.directives import dexterity
 from plone.memoize.instance import memoize
 from emc.memberArea.content.messagebox import IMessagebox
+from emc.memberArea.content.outputbox import IOutputbox
 from emc.memberArea.content.message import IMessage
 from emc.memberArea.content.todo import ITodo
 from emc.memberArea.content.favorite import IFavorite
+from emc.memberArea.content.myfolder import IMyfolder
 from emc.theme.interfaces import IThemeSpecific
 
 from emc.memberArea.events import FavoriteEvent,UnFavoriteEvent
@@ -31,8 +34,7 @@ class BaseView(grok.View):
     grok.context(Interface)
     grok.template('base_view')    
     grok.name('baseview')
-    grok.require('zope2.View')
-    
+    grok.require('zope2.View')    
     
     @memoize    
     def catalog(self):
@@ -56,7 +58,9 @@ class BaseView(grok.View):
     def getMessageUrl(self):
            
         hf = self.pm().getHomeFolder(self.pm().getAuthenticatedMember().getId())
-        box = hf['messagebox']['outputbox']
+#         import pdb
+#         pdb.set_trace()
+        box = hf['workspace']['messagebox']['outputbox']
         url = "%s/@@write_message" % box.absolute_url()     
         return url        
     
@@ -64,16 +68,13 @@ class BaseView(grok.View):
 class MessageboxView(BaseView):
     "emc memberArea messagebox view"
     grok.context(IMessagebox)
-    grok.template('messagebox_view')
+    grok.template('messagebox_ajax_view')
     grok.name('ajax_view')
-    grok.require('zope2.View')
+    grok.require('emc.memberArea.view_message')
     
     def update(self):
         # Hide the editable-object border
-        self.request.set('disable_border', True)
-
-
-    
+        self.request.set('disable_border', True)    
     
     @memoize    
     def allitems(self):
@@ -104,6 +105,8 @@ class MessageboxView(BaseView):
         """
         outhtml = ""
         brainnum = len(braindata)
+#         import pdb
+#         pdb.set_trace()
         obj = self.context
                #message content type just two status:"unreaded","readed"
         if obj.id == "messagebox":
@@ -183,14 +186,14 @@ class MessageboxView(BaseView):
         return self.catalog()(query)         
 
 class MessageAjaxSearch(grok.View):
-    """AJAX action for search.
+    """AJAX action for ajax_view.
     """    
 
     grok.name('message_ajax')
     grok.context(IMessagebox)
     grok.layer(IThemeSpecific)
     # ajax response view should be called just by manager permission?
-    grok.require('cmf.ManagePortal')
+    grok.require('emc.memberArea.view_message')
           
     def render(self):
         searchview = getMultiAdapter((self.context, self.request),name=u"view")       
@@ -214,12 +217,72 @@ class MessageAjaxSearch(grok.View):
         return data
          
 class MessageboxListView(MessageboxView):
-     "emc memberArea messagebox view"
+     "emc memberArea messagebox load more view"
      
      grok.context(IMessagebox)
      grok.template('messagebox_listing')
      grok.name('view')
-     grok.require('zope2.View')
+     grok.require('emc.memberArea.view_message')
+     
+class outputboxListView(MessageboxView):
+     "emc memberArea messagebox view"
+     
+     grok.context(IOutputbox)
+     grok.template('outputbox_listing')
+     grok.name('view')
+     grok.require('emc.memberArea.view_message')
+     
+     def outputList(self,braindata):
+        """ output brains for template render
+        """
+        outhtml = ""
+        brainnum = len(braindata)
+#         import pdb
+#         pdb.set_trace()
+        obj = self.context
+               #message content type just two status:"unreaded","readed"
+        if obj.id == "messagebox":
+            bsurl = obj.absolute_url() + "/outputbox"
+        elif obj.id == "outputbox":
+            bsurl = obj.absolute_url()
+        else:
+            bsurl = aq_parent(obj).absolute_url() + "/outputbox"
+        answerurl = bsurl + "/@@write_message"       
+        for i in braindata:
+            objurl =  i.getURL()           
+            id = i.id            
+            name = i.Title # message object's title
+            sender = i.Creator
+            register_date = i.created.strftime('%Y-%m-%d')
+#             status = i.review_state                             
+
+            delurl = "%s/delete_confirmation" % objurl                        
+            out = """<tr class="row">
+                  <td class="col-md-6">
+                      <a href="%(url)s">
+                         <span>%(name)s</span>
+                      </a>
+                  </td>                
+                  <td class="col-md-2 text-left">%(sender)s
+                  </td>
+                  <td class="col-md-2">%(register_date)s
+                  </td>
+                  """ % dict(url=objurl,
+                                                          name=name,
+                                                          sender=sender,
+                                                          register_date=register_date)
+                                      
+            out2 = """
+                  <td class="col-md-2">
+                                  <div class="col-md-6 text-center">
+                                          <a href="%(delurl)s" class="link-overlay btn btn-danger">
+                                      <i class="icon-trash icon-white"></i>删除</a>
+                                  </div>
+                   </td>          
+                  </tr>""" % dict(delurl=delurl)           
+            outhtml = "%s%s%s" %(outhtml,out,out2)
+        return outhtml
+              
      
 class TodoListView(MessageboxView):
      "emc memberArea todo listing view"
@@ -241,8 +304,7 @@ class TodoListView(MessageboxView):
      def getMessagebrains(self,start=0,size=0):
         "return messags data"
 
-        from plone import api
-        current = api.user.get_current()
+
         if size==0:
             braindata = self.allitems()
         else:
@@ -264,7 +326,7 @@ class TodoListView(MessageboxView):
             objurl =  i.getURL()           
             id = i.id            
             name = i.Title # message object's title
-            descripton = i.Description
+            description = i.Description
             sender = i.Creator
             register_date = i.created.strftime('%Y-%m-%d')
 #             status = i.review_state                          
@@ -293,14 +355,14 @@ class FavoriteListView(MessageboxView):
      grok.context(IFavorite)
      grok.template('myfavoritefolder')
      grok.name('view')
-     grok.require('zope2.View')
+     grok.require('emc.memberArea.view_favorite')
      
      def getFavoriteItemsId(self):
 
          userobject = self.pm().getAuthenticatedMember()
          userid = userobject.getId()
-         fav = self.pm().getHomeFolder(userid)['favorite']
-         favoritelist = list(fav.getattr('myfavorite',[]))
+         fav = self.pm().getHomeFolder(userid)['workspace']['favorite']
+         favoritelist = list(getattr(fav,'myfavorite',[]))
          return favoritelist         
      
      @memoize    
@@ -308,7 +370,7 @@ class FavoriteListView(MessageboxView):
         """fetch all messages"""
                      
         messagebrains = self.catalog()({
-                     'id': self.getFavoriteItemsId(),
+                     'UID': self.getFavoriteItemsId(),
                      'sort_order': 'reverse',
                      'sort_on': 'modified'})      
         return messagebrains     
@@ -322,7 +384,7 @@ class FavoriteListView(MessageboxView):
             braindata = self.allitems()
         else:
             braindata = self.catalog()({
-                                 'id': self.getFavoriteItemsId(),
+                                 'UID': self.getFavoriteItemsId(),
                                  'sort_order': 'reverse',
                                  'sort_on': 'modified',
                                  'b_start': start,
@@ -338,9 +400,10 @@ class FavoriteListView(MessageboxView):
       
         for i in braindata:
             objurl =  i.getURL()           
-            id = i.id            
+            id = i.id
+            uid = i.UID            
             name = i.Title # message object's title
-            descripton = i.Description
+            description = i.Description
             sender = i.Creator
             register_date = i.created.strftime('%Y-%m-%d')
 #             status = i.review_state                          
@@ -353,20 +416,83 @@ class FavoriteListView(MessageboxView):
                   </td>                
                   <td class="col-md-2 text-left">%(register_date)s
                   </td>
-                  <td class="col-md-2 unfavorite" rel="%(id)s data-ajax-target="%(url)s">
+                  <td class="col-md-2 unfavorite" rel="%(uid)s" data-ajax-target="%(url)s">
                   <a href="#" class="link-overlay btn btn-danger">
                                       <i class="icon-trash icon-white"></i>删除</a>
-                  </td>""" % dict(url=objurl,name=name,id=id,register_date=register_date)                 
+                  </td>""" % dict(url=objurl,name=name,uid=uid,register_date=register_date)                 
                                      
          
             outhtml = "%s%s" %(outhtml,out)
         return outhtml        
        
+class MyfolderListView(MessageboxView):
+     "emc memberArea personal netwok storage listing view"
+     
+     grok.context(IMyfolder)
+     grok.template('myfolder')
+     grok.name('view')
+     grok.require('emc.memberArea.view_favorite')
+
+     @memoize    
+     def allitems(self):
+        """fetch all messages"""               
+        messagebrains = self.catalog()( 
+                                path="/".join(self.context.getPhysicalPath()),
+                                              sort_order="reverse",
+                                              sort_on="created")       
+        return messagebrains
+        
+     def getMessagebrains(self,start=0,size=0):
+        "return messags data"
+
+        if size==0:
+            braindata = self.allitems()
+        else:
+            braindata = self.catalog()(
+                                path="/".join(self.context.getPhysicalPath()),
+                                              sort_order="reverse",
+                                              sort_on="created",
+                                              b_start= start,
+                                              b_size=size)            
+        return self.outputList(braindata)
+    
+     def outputList(self,braindata):
+        """ output brains for template render
+        """
+        outhtml = ""
+        brainnum = len(braindata)
+        obj = self.context
+      
+        for i in braindata:
+            objurl =  i.getURL()           
+            id = i.id           
+            name = i.Title # message object's title
+            description = i.Description
+            sender = i.Creator
+            register_date = i.created.strftime('%Y-%m-%d')
+            delurl = "%s/delete_confirmation" % objurl                           
+                        
+            out = """<tr class="row">
+                  <td class="col-md-8">
+                      <a href="%(url)s">
+                         <span>%(name)s</span>
+                      </a>
+                  </td>                
+                  <td class="col-md-2 text-left">%(register_date)s
+                  </td>
+                  <td class="col-md-2">
+                  <a href="%(delurl)s" class="link-overlay btn btn-danger">
+                                      <i class="icon-trash icon-white"></i>删除</a>
+                  </td>""" % dict(url=objurl,name=name,delurl=delurl,register_date=register_date)                                                             
+            outhtml = "%s%s" %(outhtml,out)
+        return outhtml    
+
 class MessageMore(grok.View):
     """message list view AJAX action for click more. default batch size is 10.
     """
-    
-    grok.context(IMessagebox)
+   
+#     grok.context(IMessagebox)
+    grok.context(Interface)    
     grok.name('more')
     grok.layer(IThemeSpecific)
     grok.require('zope2.View')            
@@ -433,20 +559,22 @@ class MessageView(BaseView):
     grok.context(IMessage)
     grok.template('message_view')
     grok.name('view')
-    grok.require('zope2.View')  
+    grok.require('emc.memberArea.view_message')  
  
 class FavoriteAjax(grok.View):
     "receive front ajax data,trigle UnFavoriteEvent"
     grok.context(IFavorite)
     grok.name('ajax')
     grok.layer(IThemeSpecific)
-    grok.require('zope2.View')
+    grok.require('emc.memberArea.view_favorite')
     
     def render(self):
         data = self.request.form
-        id = data['id']      
+        uid = data['uid']      
         catalog = getToolByName(self.context, 'portal_catalog')
-        obj = catalog({"id":id})[0].getObject()
+        import pdb
+        pdb.set_trace()
+        obj = catalog(UID=uid)[0].getObject()
         try:
             notify(UnFavoriteEvent(obj))
             result = True

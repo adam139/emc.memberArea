@@ -7,13 +7,13 @@
     </div>
     <div id="alreadyfavorited" tal:condition="view/favorited" class="favoriting_option">
       你已经收藏了这个内容！
-      <div class="text-right"><span>取消收藏</span>
+      <div class="text-right"><button class="btn btn-default" type="button">取消收藏</button>
       </div>
     </div>
     <div id="notyetfavorited" class="favoriting_option"
             tal:condition="python:view.can_favorite and not(view.favorited())">
       你是否收藏该内容？
-      <div class="text-right"><span>收藏</span>
+      <div class="text-right"><button class="btn btn-default" type="button">收藏</button>
       </div>
     </div>
   </div>
@@ -21,14 +21,16 @@
     // JQuery standard mechanism. Only execute the code after the page
     // finished loading.
     $(document).ready(function(){
-    $(#alreadyfavorited).click(function () {
+    $("#alreadyfavorited").on("click","button",function () {
             $.post($("#ajaxreq").attr("data-ajax-target") + "/undofavorite", function () {
                 location.reload();
+                            });
             });
-    $(#notyetfavorited).click(function () {
+    $("#notyetfavorited").on("click","button",function () {
             $.post($("#ajaxreq").attr("data-ajax-target") + "/dofavorite", function () {
                 location.reload();
-            });            
+         				   });                
+            }); 
 
     });
   </script>

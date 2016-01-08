@@ -31,8 +31,7 @@
        		<tr class="row" data-toggle="tooltip" title="点击排序">
             <th class="col-md-4" i18n:translate="">name</th>
             <th class="col-md-6" i18n:translate="">description</th>
-            <th class="col-md-2" i18n:translate="">date</th>             
-
+            <th class="col-md-2" i18n:translate="">date</th>           
        	  </tr>
        		</thead>
        		<div tal:omit-tag="" tal:define="itemlists python:view.getMessagebrains(0,10)">

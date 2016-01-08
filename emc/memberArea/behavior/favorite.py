@@ -3,15 +3,20 @@ from five import grok
 from persistent.list import PersistentList
 from plone.dexterity.interfaces import IDexterityContent
 from emc.memberArea.events import FavoriteEvent,UnFavoriteEvent
-from emc.memberArea.interfaces import IFavoriteEvent,IUnFavoriteEvent,IFavoriteAdapter
+from emc.memberArea.interfaces import IFavoriteEvent,IUnFavoriteEvent,IFavoriting
 from zope.lifecycleevent.interfaces import IObjectAddedEvent,IObjectRemovedEvent
 from zope.annotation.interfaces import IAnnotations
 from Products.CMFCore.utils import getToolByName
+from zope.component import adapter
+from zope.interface import implementer
+from plone.uuid.interfaces import IUUID
 
 FAVORITE_KEY = 'emc.memberArea.favorite'
 
+@implementer(IFavoriting)
+@adapter(IDexterityContent)
 class Favorite(object):
-#     grok.provides(IFavoriteAdapter)
+#     grok.provides(IFavoriting)
 #     grok.context(IDexterityContent)
     
     def __init__(self, context):
@@ -33,16 +38,16 @@ class Favorite(object):
         return len(self.favorite)
     
     def favavailable(self, userToken):
-        return  (userToken in self.favorite)  
+        return not(userToken in self.favorite)  
     
     def addfavorite(self,userToken):
-        if not self.favavailable(userToken):
+        if  self.favavailable(userToken):
             self.favorite.append(userToken)
         else:
             raise KeyError("The %s is concerned about" % userToken)
     
     def delfavorite(self,userToken):
-        if self.favavailable(userToken):
+        if not self.favavailable(userToken):
             self.favorite.remove(userToken)
         else:
            raise KeyError("The %s is not concerned about" % userToken)
@@ -56,16 +61,20 @@ def DoFavorite(obj,event):
     mp = getToolByName(obj,'portal_membership')
     userobject = mp.getAuthenticatedMember()
     userid = userobject.getId()
-    fav = mp.getHomeFolder(userid)['favorite']
-    favoritelist = list(fav.getattr('myfavorite',[]))
+#     import pdb
+#     pdb.set_trace()
+    fav = mp.getHomeFolder(userid)['workspace']['favorite']
+    favoritelist = list(getattr(fav,'myfavorite',[]))
     
-    if not obj.id in favoritelist:
-        favoritelist.append(obj.id)
-        fav.setattr(favoritelist)
+    uuid = IUUID(obj,None)
+    if uuid == None:return
+    if not uuid in favoritelist:
+        favoritelist.append(uuid)
+        setattr(fav,'myfavorite',favoritelist)
 #         fav.reindexObject()
         
-    ada = IFavoriteAdapter(obj)
-    if not ada.favavailable(userid):
+    ada = IFavoriting(obj)
+    if ada.favavailable(userid):
         ada.addfavorite(userid)
 
 @grok.subscribe(IDexterityContent, IUnFavoriteEvent)
@@ -74,16 +83,17 @@ def UnFavoriteAnswer(obj,event):
     mp = getToolByName(obj,'portal_membership')
     userobject = mp.getAuthenticatedMember()
     userid = userobject.getId()
-    fav = mp.getHomeFolder(userid)['favorite']
-    favoritelist = list(fav.getattr('myfavorite',[]))
-    
-    if  obj.id in favoritelist:
-        favoritelist.remove(obj.id)
-        fav.setattr(favoritelist)
+    fav = mp.getHomeFolder(userid)['workspace']['favorite']
+    favoritelist = list(getattr(fav,'myfavorite',[]))
+    uuid = IUUID(obj,None)
+    if uuid == None:return    
+    if  uuid in favoritelist:
+        favoritelist.remove(uuid)
+        setattr(fav,'myfavorite',favoritelist)
         
-    ada = IFavoriteAdapter(obj)
-    if ada.favavailable(username):
-        ada.delfavorite(username)
+    ada = IFavoriting(obj)
+    if not ada.favavailable(userid):
+        ada.delfavorite(userid)
         
 @grok.subscribe(IDexterityContent, IObjectRemovedEvent)
 def delFavorite(obj,event):
@@ -91,7 +101,7 @@ def delFavorite(obj,event):
     """判断当前答案是否被收藏，当对象被删除时，收藏也应删除"""    
     
     try:
-        ada = IFavoriteAdapter(obj)
+        ada = IFavoriting(obj)
     except:
         return
 
@@ -101,11 +111,13 @@ def delFavorite(obj,event):
     
     mp = getToolByName(obj, 'portal_membership')
     for userid in useridlist:
-        fav = mp.getHomeFolder(userid)['favorite']
-        favoritelist = list(fav.getattr('myfavorite',[]))
+        fav = mp.getHomeFolder(userid)['workspace']['favorite']
+        favoritelist = list(getattr(fav,'myfavorite',[]))
+        uuid = IUUID(obj)
 #         """删除用户收藏到答案"""        
-        favoritelist.remove(obj.getId())
-        fav.setattr(favoritelist)
+        if uuid in favoritelist:
+            favoritelist.remove(uuid)
+            setattr(fav,'myfavorite',favoritelist)
 
 
         

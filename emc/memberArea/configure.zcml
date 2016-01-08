@@ -9,7 +9,7 @@
     <!-- Include configuration for dependencies listed in setup.py -->
     <includeDependencies package="." />
     <!-- Grok the package to initialise schema interfaces and content classes -->
-    <grok:grok package="." />
+
 
   <i18n:registerTranslations directory="locales" />
 
@@ -44,6 +44,7 @@
       provides="Products.GenericSetup.interfaces.EXTENSION"
       />
   <!-- -*- extra stuff goes here -*- -->
+   <grok:grok package="." />
    <include package=".browser" />
    <include package=".behavior" />     
 </configure>

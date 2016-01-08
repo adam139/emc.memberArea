@@ -26,7 +26,7 @@ from emc.theme.interfaces import IThemeSpecific
 class RegistrationForm(form.SchemaForm):
     grok.name('write_message')
     grok.context(IOutputbox)
-    grok.require("zope.Public")
+    grok.require("emc.memberArea.send_message")
     grok.layer(IThemeSpecific)    
     schema = IMessage
     ignoreContext = True
@@ -42,7 +42,7 @@ class RegistrationForm(form.SchemaForm):
 #        self.widgets['privacy'].mode = 'display'
 #        self.widgets['privacy'].autoresize = True
         self.widgets['title'].addClass("form-control")
-        self.widgets['description'].addClass("form-control")
+        self.widgets['text'].addClass("form-control")
         self.widgets['sendto'].addClass("form-control")                        
 
     
@@ -84,13 +84,13 @@ class RegistrationForm(form.SchemaForm):
 #        self.request.response.redirect(portal.absolute_url() + "/login_form")
         self.request.response.redirect(self.context.absolute_url())
         IStatusMessage(self.request).addStatusMessage(
-                        _p(u'create_message_succesful',
+                        _(u'create_message_succesful',
                           default=u"Your message:${title} has been sent.",
                           mapping={u'title': title}),
                         type='info')
         return
     
-    @button.buttonAndHandler(_p(u"cancel"))
+    @button.buttonAndHandler(_p(u"Cancel"))
     def cancel(self, action):
 
         self.request.response.redirect(self.context.absolute_url())

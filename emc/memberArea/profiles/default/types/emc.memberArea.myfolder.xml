@@ -8,11 +8,12 @@
   <property name="description"
     i18n:translate="">myfolder content type</property>
 <property name="content_icon">++resource++emc.project/folder.png</property>
-  <property name="global_allow">True</property>
+  <property name="global_allow">False</property>
   <property name="filter_content_types">True</property>  
   <property name="allowed_content_types">
   	 <element value="File" />
-  	 <element value="Document" />   	   
+  	 <element value="Document" />
+  	 <element value="emc.memberArea.undo" />  	    	   
   </property>
   <property name="allow_discussion">False</property>
 

@@ -21,17 +21,17 @@ class TestView(unittest.TestCase):
     def setUp(self):
         portal = self.layer['portal']
         setRoles(portal, TEST_USER_ID, ('Manager',))
+        portal.invokeFactory('emc.memberArea.workspace', 'work1')
+        portal['work1'].invokeFactory('emc.memberArea.messagebox', 'folder1')
+        portal['work1'].invokeFactory('emc.memberArea.myfolder', 'my1')
+        portal['work1'].invokeFactory('emc.memberArea.todo', 'to1',title="todo items")
+        portal['work1'].invokeFactory('emc.memberArea.favorite', 'fa1',title="favorite items")                
+        portal['work1']['folder1'].invokeFactory('emc.memberArea.inputbox', 'input1')
+        portal['work1']['folder1'].invokeFactory('emc.memberArea.outputbox', 'output1')
+        portal['work1']['folder1']['input1'].invokeFactory('emc.memberArea.message', 'message1')
+        portal['work1']['folder1']['output1'].invokeFactory('emc.memberArea.message', 'message1')                      
 
-        portal.invokeFactory('emc.memberArea.messagebox', 'folder1')
-        portal.invokeFactory('emc.memberArea.myfolder', 'my1')
-        portal.invokeFactory('emc.memberArea.todo', 'to1',title="todo items")
-        portal.invokeFactory('emc.memberArea.favorite', 'fa1',title="favorite items")                
-        portal['folder1'].invokeFactory('emc.memberArea.inputbox', 'input1')
-        portal['folder1'].invokeFactory('emc.memberArea.outputbox', 'output1')
-        portal['folder1']['input1'].invokeFactory('emc.memberArea.message', 'message1')
-        portal['folder1']['output1'].invokeFactory('emc.memberArea.message', 'message1')                      
-
-        self.portal = portal   
+        self.portal = portal  
 
     def test_myfolder_view(self):
 
@@ -43,7 +43,7 @@ class TestView(unittest.TestCase):
         
         import transaction
         transaction.commit()
-        obj = portal['to1'].absolute_url()       
+        obj = portal['work1']['to1'].absolute_url()       
         page = obj + '/@@view'
 #        import pdb
 #        pdb.set_trace()
@@ -63,7 +63,7 @@ class TestView(unittest.TestCase):
         
         import transaction
         transaction.commit()
-        obj = portal['my1'].absolute_url()       
+        obj = portal['work1']['my1'].absolute_url()       
         page = obj + '/folder_contents'
 #        import pdb
 #        pdb.set_trace()
@@ -83,7 +83,7 @@ class TestView(unittest.TestCase):
         
         import transaction
         transaction.commit()
-        obj = portal['folder1']['output1']['message1'].absolute_url()       
+        obj = portal['work1']['folder1']['output1']['message1'].absolute_url()       
         page = obj + '/@@view'
 #        import pdb
 #        pdb.set_trace()
@@ -100,7 +100,7 @@ class TestView(unittest.TestCase):
         
         import transaction
         transaction.commit()
-        obj = portal['folder1']['input1'].absolute_url()       
+        obj = portal['work1']['folder1']['input1'].absolute_url()       
         page = obj + '/@@view'
 #        import pdb
 #        pdb.set_trace()
@@ -117,7 +117,7 @@ class TestView(unittest.TestCase):
         
         import transaction
         transaction.commit()
-        obj = portal['folder1']['input1'].absolute_url()       
+        obj = portal['work1']['folder1']['input1'].absolute_url()       
         page = obj + '/@@view'
 #        import pdb
 #        pdb.set_trace()
@@ -134,7 +134,7 @@ class TestView(unittest.TestCase):
         
         import transaction
         transaction.commit()
-        obj = portal['folder1'].absolute_url()       
+        obj = portal['work1']['folder1'].absolute_url()       
         page = obj + '/@@ajax_view'
 #        import pdb
 #        pdb.set_trace()
@@ -151,7 +151,9 @@ class TestView(unittest.TestCase):
         
         import transaction
         transaction.commit()
-        obj = portal['fa1'].absolute_url()       
+        obj = portal['work1']['fa1'].absolute_url()
+        import pdb
+        pdb.set_trace()       
         page = obj + '/@@view'
 #        import pdb
 #        pdb.set_trace()
@@ -169,7 +171,7 @@ class TestView(unittest.TestCase):
         import transaction
         transaction.commit()
         from emc.memberArea.content.outputbox import IOutputbox
-        obj = portal['folder1']['output1'] 
+        obj = portal['work1']['folder1']['output1'] 
         self.assertTrue(IOutputbox.providedBy(obj))
 #         import pdb
 #         pdb.set_trace()

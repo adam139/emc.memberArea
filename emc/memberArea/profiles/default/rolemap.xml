@@ -12,11 +12,11 @@
       <role name="Member"/>
     </permission>
     <permission name="emc.memberArea:View message" acquire="True">
-      <role name="Member"/>
+
       <role name="Owner"/>            
     </permission>
     <permission name="emc.memberArea:Modify message" acquire="True">
-      <role name="Member"/>
+
       <role name="Owner"/>            
     </permission>       
   </permissions>

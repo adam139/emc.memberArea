@@ -11,7 +11,8 @@
 
    <browser:viewlet
      name="favorite"
-     for="emc.memberArea.interfaces.IFavoriting"
+     for="emc.memberArea.interfaces.IFavoritable"
+     view="plone.app.layout.globals.interfaces.IViewView"
      manager="plone.app.layout.viewlets.interfaces.IBelowContentTitle"
      layer="..interfaces.IFavoritableLayer"
      class=".viewlets.Favorite"
