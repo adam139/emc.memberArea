@@ -1,4 +1,5 @@
 #-*- coding: UTF-8 -*-
+from plone import api
 from five import grok
 from zope.interface import alsoProvides
 from AccessControl import ClassSecurityInfo, getSecurityManager
@@ -8,13 +9,15 @@ from emc.memberArea.interfaces import IMemberAreaCreatedEvent,IMessageCreatedEve
 from Products.CMFCore.utils import getToolByName
 from plone.dexterity.utils import createContentInContainer
 from Products.PluggableAuthService.interfaces.authservice import IPropertiedUser
+from zope.interface import Interface
 
 from zope.lifecycleevent.interfaces import IObjectAddedEvent
 from emc.memberArea.content.message import IMessage
 from emc.memberArea.interfaces import IWorkspace
 from emc.memberArea.utils import UnrestrictedUser,execute_under_special_role
 
-@grok.subscribe(IPropertiedUser,IMemberAreaCreatedEvent)
+# @grok.subscribe(IPropertiedUser,IMemberAreaCreatedEvent)
+@grok.subscribe(Interface,IMemberAreaCreatedEvent)
 def create_messagebox(obj,event):
     """创建个人信箱"""
     pm = getToolByName(obj,'portal_membership')
@@ -22,6 +25,8 @@ def create_messagebox(obj,event):
     if root is None: return
 # bypass permission check
     old_sm = getSecurityManager()
+    portal = api.portal.get()
+
     tmp_user = UnrestrictedUser(old_sm.getUser().getId(),'', ['Manager'],'')        
     tmp_user = tmp_user.__of__(portal.acl_users)
     newSecurityManager(None, tmp_user)    
@@ -65,12 +70,11 @@ def dispatch_message(obj,event):
 #     if type(receivers) != type((1,)):receivers= tuple(receivers,)
 #     import pdb
 #     pdb.set_trace()
-    from plone import api
-    portal = api.portal.get()
+
 # bypass permission check
     old_sm = getSecurityManager()
     tmp_user = UnrestrictedUser(old_sm.getUser().getId(),'', ['Manager'],'')
-        
+    portal = api.portal.get()        
     tmp_user = tmp_user.__of__(portal.acl_users)
     newSecurityManager(None, tmp_user)    
     for i in receivers:

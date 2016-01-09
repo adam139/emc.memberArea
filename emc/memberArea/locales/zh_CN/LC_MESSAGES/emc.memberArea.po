@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: emc bokeh\n"
-"POT-Creation-Date: 2016-01-04 12:22+0000\n"
+"POT-Creation-Date: 2016-01-09 03:18+0000\n"
 "PO-Revision-Date: 2016-01-04 20:29+0800\n"
 "Last-Translator: adam <yuejun.tang@gmail.com>\n"
 "Language-Team: LANGUAGE <yuejun.tang@gmail.com>\n"
@@ -19,13 +19,19 @@ msgstr ""
 msgid "Please correct errors"
 msgstr "请更正下面错误"
 
+#. Default: "Your message:${title} has been sent."
+#: ./browser/creat_message.py:87
+msgid "create_message_succesful"
+msgstr "你的邮件:${title}已发送。"
+
+#: ./browser/templates/messagebox_ajax_view.pt:36
 #: ./browser/templates/messagebox_listing.pt:42
-#: ./browser/templates/messagebox_view.pt:36
 #: ./browser/templates/myfavoritefolder.pt:31
 msgid "date"
 msgstr "日期"
 
 #: ./browser/templates/todo_listing.pt:33
+#: ./browser/templates/workspace.pt:56
 msgid "description"
 msgstr "描述"
 
@@ -81,14 +87,14 @@ msgstr "个人网盘"
 msgid "myfolder content type"
 msgstr "网盘类型"
 
+#: ./browser/templates/messagebox_ajax_view.pt:34
 #: ./browser/templates/messagebox_listing.pt:40
-#: ./browser/templates/messagebox_view.pt:34
 #: ./browser/templates/myfavoritefolder.pt:30
 msgid "name"
 msgstr "标题"
 
+#: ./browser/templates/messagebox_ajax_view.pt:38
 #: ./browser/templates/messagebox_listing.pt:44
-#: ./browser/templates/messagebox_view.pt:38
 #: ./browser/templates/myfavoritefolder.pt:32
 msgid "operates"
 msgstr "操作"
@@ -98,11 +104,13 @@ msgid "outputbox"
 msgstr "发件箱"
 
 #: ./browser/templates/myfavoritefolder.pt:24
+#: ./browser/templates/myfolder.pt:24
 msgid "personal favorite information"
 msgstr "我的收藏夹信息"
 
+#: ./browser/templates/messagebox_ajax_view.pt:27
 #: ./browser/templates/messagebox_listing.pt:34
-#: ./browser/templates/messagebox_view.pt:27
+#: ./browser/templates/outputbox_listing.pt:34
 msgid "personal message box information"
 msgstr "个人邮箱信息"
 
@@ -118,8 +126,9 @@ msgstr "发送消息到会员"
 msgid "send to"
 msgstr "发送给"
 
+#: ./browser/templates/messagebox_ajax_view.pt:35
 #: ./browser/templates/messagebox_listing.pt:41
-#: ./browser/templates/messagebox_view.pt:35
+#: ./browser/templates/outputbox_listing.pt:41
 msgid "sender"
 msgstr "发送者"
 
@@ -127,8 +136,9 @@ msgstr "发送者"
 msgid "site message title"
 msgstr "消息标题"
 
+#: ./browser/templates/messagebox_ajax_view.pt:37
 #: ./browser/templates/messagebox_listing.pt:43
-#: ./browser/templates/messagebox_view.pt:37
+#: ./browser/templates/workspace.pt:39
 msgid "status"
 msgstr "状态"
 
@@ -139,4 +149,12 @@ msgstr "待办事宜"
 #: ./profiles/default/types/emc.memberArea.todo.xml
 msgid "todo content type"
 msgstr "待办事宜类型"
+
+#: ./profiles/default/types/emc.memberArea.workspace.xml
+msgid "workspace"
+msgstr "工作台"
+
+#: ./profiles/default/types/emc.memberArea.workspace.xml
+msgid "workspace content type"
+msgstr "工作台类型"
 

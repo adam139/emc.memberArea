@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2016-01-04 12:22+0000\n"
+"POT-Creation-Date: 2016-01-09 03:18+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,13 +18,19 @@ msgstr ""
 msgid "Please correct errors"
 msgstr ""
 
+#. Default: "Your message:${title} has been sent."
+#: ./browser/creat_message.py:87
+msgid "create_message_succesful"
+msgstr ""
+
+#: ./browser/templates/messagebox_ajax_view.pt:36
 #: ./browser/templates/messagebox_listing.pt:42
-#: ./browser/templates/messagebox_view.pt:36
 #: ./browser/templates/myfavoritefolder.pt:31
 msgid "date"
 msgstr ""
 
 #: ./browser/templates/todo_listing.pt:33
+#: ./browser/templates/workspace.pt:56
 msgid "description"
 msgstr ""
 
@@ -80,14 +86,14 @@ msgstr ""
 msgid "myfolder content type"
 msgstr ""
 
+#: ./browser/templates/messagebox_ajax_view.pt:34
 #: ./browser/templates/messagebox_listing.pt:40
-#: ./browser/templates/messagebox_view.pt:34
 #: ./browser/templates/myfavoritefolder.pt:30
 msgid "name"
 msgstr ""
 
+#: ./browser/templates/messagebox_ajax_view.pt:38
 #: ./browser/templates/messagebox_listing.pt:44
-#: ./browser/templates/messagebox_view.pt:38
 #: ./browser/templates/myfavoritefolder.pt:32
 msgid "operates"
 msgstr ""
@@ -97,11 +103,13 @@ msgid "outputbox"
 msgstr ""
 
 #: ./browser/templates/myfavoritefolder.pt:24
+#: ./browser/templates/myfolder.pt:24
 msgid "personal favorite information"
 msgstr ""
 
+#: ./browser/templates/messagebox_ajax_view.pt:27
 #: ./browser/templates/messagebox_listing.pt:34
-#: ./browser/templates/messagebox_view.pt:27
+#: ./browser/templates/outputbox_listing.pt:34
 msgid "personal message box information"
 msgstr ""
 
@@ -117,8 +125,9 @@ msgstr ""
 msgid "send to"
 msgstr ""
 
+#: ./browser/templates/messagebox_ajax_view.pt:35
 #: ./browser/templates/messagebox_listing.pt:41
-#: ./browser/templates/messagebox_view.pt:35
+#: ./browser/templates/outputbox_listing.pt:41
 msgid "sender"
 msgstr ""
 
@@ -126,8 +135,9 @@ msgstr ""
 msgid "site message title"
 msgstr ""
 
+#: ./browser/templates/messagebox_ajax_view.pt:37
 #: ./browser/templates/messagebox_listing.pt:43
-#: ./browser/templates/messagebox_view.pt:37
+#: ./browser/templates/workspace.pt:39
 msgid "status"
 msgstr ""
 
@@ -137,5 +147,13 @@ msgstr ""
 
 #: ./profiles/default/types/emc.memberArea.todo.xml
 msgid "todo content type"
+msgstr ""
+
+#: ./profiles/default/types/emc.memberArea.workspace.xml
+msgid "workspace"
+msgstr ""
+
+#: ./profiles/default/types/emc.memberArea.workspace.xml
+msgid "workspace content type"
 msgstr ""
 

@@ -453,8 +453,9 @@ class MyfolderListView(MessageboxView):
                                               sort_order="reverse",
                                               sort_on="created",
                                               b_start= start,
-                                              b_size=size)            
-        return self.outputList(braindata)
+                                              b_size=size)
+            brains = [brain for brain in braindata if brain.id !="myfolder"]            
+        return self.outputList(brains)
     
      def outputList(self,braindata):
         """ output brains for template render
