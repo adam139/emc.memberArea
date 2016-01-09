@@ -26,6 +26,7 @@ setup(name='emc.memberArea',
       install_requires=[
           'setuptools',
           'five.grok',
+          'collective.wtf',          
           'plone.app.dexterity',
           'collective.autopermission',
           'plone.directives.form',
