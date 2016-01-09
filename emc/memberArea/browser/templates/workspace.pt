@@ -152,8 +152,10 @@ $('#favcontent').on('click','.unfavorite', function(){
 			var states = {'uid': uid};
 			$(this).removeClass('off').addClass('on');			
 			$.post(action, states, function(result){
-				if (result) {
-				$(this).parent().hide();
+			var res = result["result"];
+				if (res == 1) {
+				$("#favcontent td.on").parent().hide();
+				return false;
 				}
 				else {return false;}
 			}, 'json');

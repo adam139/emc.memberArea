@@ -37,11 +37,13 @@ def create_messagebox(obj,event):
     item = createContentInContainer(fd,"emc.memberArea.messagebox",checkConstraints=False,id=id)
     item.title = u'个人信箱'.encode("utf-8")
     inputbox = createContentInContainer(item,"emc.memberArea.inputbox",checkConstraints=False,id="inputbox")
-    inputbox.id = "inputbox"
+#     inputbox.id = "inputbox"
     inputbox.title = u'收件箱'.encode("utf-8")
+    inputbox.reindexObject()
     outputbox = createContentInContainer(item,"emc.memberArea.outputbox",checkConstraints=False,id="outputbox")
-    outputbox.id = "outputbox"
+#     outputbox.id = "outputbox"
     outputbox.title = u'发件箱'.encode("utf-8")
+    outputbox.reindexObject()
     id = 'myfolder'
     item = createContentInContainer(fd,"emc.memberArea.myfolder",checkConstraints=False,id=id)
     item.title = u'个人网盘'.encode("utf-8")

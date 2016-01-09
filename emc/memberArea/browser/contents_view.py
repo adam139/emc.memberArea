@@ -573,15 +573,16 @@ class FavoriteAjax(grok.View):
         data = self.request.form
         uid = data['uid']      
         catalog = getToolByName(self.context, 'portal_catalog')
-        import pdb
-        pdb.set_trace()
+#         import pdb
+#         pdb.set_trace()
         obj = catalog(UID=uid)[0].getObject()
         try:
             notify(UnFavoriteEvent(obj))
-            result = True
+            result = 1
         except:
-            result = False           
+            result = 0           
+        data = {"result":result}
         self.request.response.setHeader('Content-Type', 'application/json')
-        return json.dumps(result)
+        return json.dumps(data)
  
         
