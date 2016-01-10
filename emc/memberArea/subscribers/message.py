@@ -8,13 +8,13 @@ from emc.memberArea.interfaces import IMemberAreaCreatedEvent,IMessageCreatedEve
 
 from Products.CMFCore.utils import getToolByName
 from plone.dexterity.utils import createContentInContainer
-from Products.PluggableAuthService.interfaces.authservice import IPropertiedUser
+# from Products.PluggableAuthService.interfaces.authservice import IPropertiedUser
 from zope.interface import Interface
 
 from zope.lifecycleevent.interfaces import IObjectAddedEvent
 from emc.memberArea.content.message import IMessage
 from emc.memberArea.interfaces import IWorkspace
-from emc.memberArea.utils import UnrestrictedUser,execute_under_special_role
+from emc.memberArea.utils import UnrestrictedUser
 
 # @grok.subscribe(IPropertiedUser,IMemberAreaCreatedEvent)
 @grok.subscribe(Interface,IMemberAreaCreatedEvent)
@@ -69,9 +69,6 @@ def get_personal_inputbox_byid(obj,id):
 def dispatch_message(obj,event):
     """This handler will deliver message to incoming box of receivers""" 
     receivers = obj.sendto
-#     if type(receivers) != type((1,)):receivers= tuple(receivers,)
-#     import pdb
-#     pdb.set_trace()
 
 # bypass permission check
     old_sm = getSecurityManager()
@@ -84,13 +81,11 @@ def dispatch_message(obj,event):
         api.content.copy(source=obj, target=inputbox)
         id = obj.id
 
-        # mark the new obj as unreaded status
+        # message init state is unreaded status
 #         api.content.transition(obj=inputbox[id], transition='undo')
         inputbox[id].reindexObject()
     # recover old sm
     setSecurityManager(old_sm)
-#         message = createContentInContainer(inputbox,"emc.memberArea.message",checkConstraints=False,id=obj.id)
-#         message.title = obj.title
-#         message.description = obj.description
+
          
 

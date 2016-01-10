@@ -1,4 +1,5 @@
 #-*- coding: UTF-8 -*-
+from plone import api
 from five import grok
 from z3c.form import field
 import json
@@ -135,8 +136,9 @@ class MessageboxView(BaseView):
                   </td>
                   <td class="col-md-2">%(register_date)s
                   </td>
-                  <td class="col-md-2 handler">""" % dict(url=objurl,
+                  <td class="col-md-2 handler" data-target="%(switch_ajax)s">""" % dict(url=objurl,
                                                           name=name,
+                                                          switch_ajax="%s/@@ajaxmemberstate" % objurl,
                                                           sender=sender,
                                                           register_date=register_date)
 
@@ -237,8 +239,7 @@ class outputboxListView(MessageboxView):
         """
         outhtml = ""
         brainnum = len(braindata)
-#         import pdb
-#         pdb.set_trace()
+
         obj = self.context
                #message content type just two status:"unreaded","readed"
         if obj.id == "messagebox":
@@ -521,8 +522,8 @@ class MessageMore(grok.View):
         return json.dumps(data)
     
 class MessageState(grok.View):
-    "receive front ajax data,change member workflow status"
-    grok.context(IMessagebox)
+    "receive front end ajax data,change member workflow status"
+    grok.context(IMessage)
     grok.name('ajaxmessagestate')
     grok.layer(IThemeSpecific)
     grok.require('zope2.View')
@@ -531,10 +532,11 @@ class MessageState(grok.View):
         data = self.request.form
         id = data['id']
         state = data['state']        
-        catalog = getToolByName(self.context, 'portal_catalog')
-        obj = catalog({'object_provides': IMessage.__identifier__,
-                       'path':"/".join(self.context.getPhysicalPath()), 
-                       "id":id})[0].getObject()        
+#         catalog = getToolByName(self.context, 'portal_catalog')
+#         obj = catalog({'object_provides': IMessage.__identifier__,
+#                        'path':"/".join(self.context.getPhysicalPath()), 
+#                        "id":id})[0].getObject()
+        obj = self.context        
         portal_workflow = getToolByName(self.context, 'portal_workflow')
 # obj current status        
         if state == "unreaded" : # this is a new account
@@ -560,10 +562,19 @@ class MessageView(BaseView):
     grok.context(IMessage)
     grok.template('message_view')
     grok.name('view')
-    grok.require('emc.memberArea.view_message')  
+    grok.require('emc.memberArea.view_message')
+    
+    def update(self):
+        "update workflow status info"
+
+        portal = api.portal.get()
+        state = api.content.get_state(obj=self.context, default='Unknown')
+        if state == "unreaded":
+            api.content.transition(obj=self.context, transition='done')
+              
  
 class FavoriteAjax(grok.View):
-    "receive front ajax data,trigle UnFavoriteEvent"
+    "receive front end ajax data,trigle UnFavoriteEvent"
     grok.context(IFavorite)
     grok.name('ajax')
     grok.layer(IThemeSpecific)

@@ -28,15 +28,17 @@ class TestView(unittest.TestCase):
     def setUp(self):
         portal = self.layer['portal']
         setRoles(portal, TEST_USER_ID, ('Manager',))
+        portal.invokeFactory('emc.memberArea.workspace', 'work1')
+        portal['work1'].invokeFactory('emc.memberArea.messagebox', 'folder1')
+        portal['work1'].invokeFactory('emc.memberArea.myfolder', 'my1')
+        portal['work1'].invokeFactory('emc.memberArea.todo', 'to1',title="todo items")
+        portal['work1'].invokeFactory('emc.memberArea.favorite', 'fa1',title="favorite items")                
+        portal['work1']['folder1'].invokeFactory('emc.memberArea.inputbox', 'input1')
+        portal['work1']['folder1'].invokeFactory('emc.memberArea.outputbox', 'output1')
+        portal['work1']['folder1']['input1'].invokeFactory('emc.memberArea.message', 'message1')
+        portal['work1']['folder1']['output1'].invokeFactory('emc.memberArea.message', 'message1')                      
 
-        portal.invokeFactory('emc.memberArea.messagebox', 'folder1')
-        portal['folder1'].invokeFactory('emc.memberArea.inputbox', 'input1')
-        portal['folder1'].invokeFactory('emc.memberArea.outputbox', 'output1')
-        portal['folder1']['input1'].invokeFactory('emc.memberArea.message', 'message1')
-        portal['folder1']['output1'].invokeFactory('emc.memberArea.message', 'message1')          
-             
-
-        self.portal = portal  
+        self.portal = portal   
         
     def test_ajax_search(self):
         request = self.layer['request']
@@ -58,7 +60,7 @@ class TestView(unittest.TestCase):
                                                                        
                         }
 # Look up and invoke the view via traversal
-        box = self.portal['folder1']
+        box = self.portal['work1']['folder1']
         view = box.restrictedTraverse('@@message_ajax')
         result = view()
         self.assertEqual(json.loads(result)['total'],2)
@@ -84,10 +86,27 @@ class TestView(unittest.TestCase):
                                                                        
                         }
 # Look up and invoke the view via traversal
-        box = self.portal['folder1']
+        box = self.portal['work1']['folder1']
         view = box.restrictedTraverse('@@more')
         result = view()
         self.assertEqual(json.loads(result)['ifmore'],1)        
 
+    def test_message_status_switch(self):
+        request = self.layer['request']
+        from emc.theme.interfaces import IThemeSpecific
+        alsoProvides(request, IThemeSpecific)        
+        keyManager = getUtility(IKeyManager)
+        secret = keyManager.secret()
+        auth = hmac.new(secret, TEST_USER_NAME, sha).hexdigest()
+        request.form = {
+                        '_authenticator': auth,
+                        'id':'message1',
+                        'state': "unreaded",                                                                       
+                        }
+# Look up and invoke the view via traversal
+        box = self.portal['work1']['folder1']['input1']['message1']
+        view = box.restrictedTraverse('@@ajaxmessagestate')
+        result = view()
+        self.assertEqual(json.loads(result),True)  
              
 
