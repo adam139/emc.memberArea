@@ -358,13 +358,16 @@ class FavoriteListView(MessageboxView):
      grok.name('view')
      grok.require('emc.memberArea.view_favorite')
      
-     def getFavoriteItemsId(self):
 
+     def getFavoriteItemsId(self):
          userobject = self.pm().getAuthenticatedMember()
-         userid = userobject.getId()
-         fav = self.pm().getHomeFolder(userid)['workspace']['favorite']
-         favoritelist = list(getattr(fav,'myfavorite',[]))
-         return favoritelist         
+         favoritelist = list(userobject.getProperty('myfavorite'))
+         return favoritelist 
+#          userobject = self.pm().getAuthenticatedMember()
+#          userid = userobject.getId()
+#          fav = self.pm().getHomeFolder(userid)['workspace']['favorite']
+#          favoritelist = list(getattr(fav,'myfavorite',[]))
+#          return favoritelist         
      
      @memoize    
      def allitems(self):

@@ -16,11 +16,11 @@ class Fixture(PloneSandboxLayer):
     def setUpZope(self, app, configurationContext):
         # Load ZCML
         import emc.memberArea
-#        import xtshzz.policy
+        import emc.theme
 #        self.loadZCML(package=xtshzz.policy)
   
         xmlconfig.file('configure.zcml', emc.memberArea, context=configurationContext)        
-#        xmlconfig.file('configure.zcml', xtshzz.policy, context=configurationContext)
+        xmlconfig.file('configure.zcml', emc.theme, context=configurationContext)
                       
     def tearDownZope(self, app):
         pass

@@ -32,10 +32,19 @@ def create_messagebox(obj,event):
     newSecurityManager(None, tmp_user)    
     id = 'workspace'
     fd = createContentInContainer(root,"emc.memberArea.workspace",checkConstraints=False,id=id)
-    fd.title = u'个人工作区'.encode("utf-8")  
+    fd.title = u'个人工作区'.encode("utf-8")
+    id = 'mentionwofolder'
+    item = createContentInContainer(fd,"emc.kb.mentionwofolder",checkConstraints=False,id=id)
+    item.title = '和我相关的'
+    item.reindexObject()
+    id = 'feedsfolder'
+    item = createContentInContainer(file,"emc.kb.feedsfolder",checkConstraints=False,id=id)
+    item.title = '系统通知'
+    item.reindexObject()                  
     id = 'messagebox'
     item = createContentInContainer(fd,"emc.memberArea.messagebox",checkConstraints=False,id=id)
     item.title = u'个人信箱'.encode("utf-8")
+    item.reindexObject()
     inputbox = createContentInContainer(item,"emc.memberArea.inputbox",checkConstraints=False,id="inputbox")
 #     inputbox.id = "inputbox"
     inputbox.title = u'收件箱'.encode("utf-8")

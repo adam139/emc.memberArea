@@ -29,6 +29,7 @@ class Favorite(base.ViewletBase):
                 DoFavorite, self.context)
 
     def favorited(self):
+        "是否已被当前用户收藏,true:已被收藏"
 
         userid = self.pm.getAuthenticatedMember().getId()
         return not(self.favorite.favavailable(userid))

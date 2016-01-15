@@ -28,16 +28,12 @@ class Favorite(object):
 
         self.favorite = annotations[FAVORITE_KEY]    
     
-#     
-#     def __init__(self, context):
-#         self.context = context        
-#         annotations = IAnnotations(context)
-#         self.favorite = annotations.setdefault(FAVORITE_KEY, OOSet())  
-        
+     
     def number(self):
         return len(self.favorite)
     
     def favavailable(self, userToken):
+        "当前用户是否可以收藏本对象,True:可以收藏"
         return not(userToken in self.favorite)  
     
     def addfavorite(self,userToken):
@@ -61,16 +57,19 @@ def DoFavorite(obj,event):
     mp = getToolByName(obj,'portal_membership')
     userobject = mp.getAuthenticatedMember()
     userid = userobject.getId()
+    favoritelist = list(userobject.getProperty('myfavorite'))   
+
 #     import pdb
 #     pdb.set_trace()
-    fav = mp.getHomeFolder(userid)['workspace']['favorite']
-    favoritelist = list(getattr(fav,'myfavorite',[]))
+#     fav = mp.getHomeFolder(userid)['workspace']['favorite']
+#     favoritelist = list(getattr(fav,'myfavorite',[]))
     
     uuid = IUUID(obj,None)
     if uuid == None:return
     if not uuid in favoritelist:
         favoritelist.append(uuid)
-        setattr(fav,'myfavorite',favoritelist)
+        userobject.setProperties(myfavorite=favoritelist)
+#         setattr(fav,'myfavorite',favoritelist)
 #         fav.reindexObject()
         
     ada = IFavoriting(obj)
@@ -83,13 +82,15 @@ def UnFavoriteAnswer(obj,event):
     mp = getToolByName(obj,'portal_membership')
     userobject = mp.getAuthenticatedMember()
     userid = userobject.getId()
-    fav = mp.getHomeFolder(userid)['workspace']['favorite']
-    favoritelist = list(getattr(fav,'myfavorite',[]))
+    favoritelist = list(userobject.getProperty('myfavorite'))    
+#     fav = mp.getHomeFolder(userid)['workspace']['favorite']
+#     favoritelist = list(getattr(fav,'myfavorite',[]))
     uuid = IUUID(obj,None)
     if uuid == None:return    
     if  uuid in favoritelist:
         favoritelist.remove(uuid)
-        setattr(fav,'myfavorite',favoritelist)
+        userobject.setProperties(myfavorite=favoritelist)
+#         setattr(fav,'myfavorite',favoritelist)
         
     ada = IFavoriting(obj)
     if not ada.favavailable(userid):

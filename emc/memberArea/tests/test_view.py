@@ -152,8 +152,7 @@ class TestView(unittest.TestCase):
         import transaction
         transaction.commit()
         obj = portal['work1']['fa1'].absolute_url()
-        import pdb
-        pdb.set_trace()       
+      
         page = obj + '/@@view'
 #        import pdb
 #        pdb.set_trace()
