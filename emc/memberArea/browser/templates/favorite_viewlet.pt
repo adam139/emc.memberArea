@@ -3,7 +3,7 @@
   		<div id="ajaxreq" class="hiddenStructure" 
 			tal:attributes="data-ajax-target python:context.absolute_url()"></div>
     <div class="text-center" id="current_favoriting" tal:condition="view/has_favorites">
-      当前收藏这个内容的用户有<span tal:content="view/number">200</span>个。
+      当前收藏这个内容的用户有<span class="txtvalue badge" tal:content="view/number">200</span>个。
     </div>
     <div id="alreadyfavorited" tal:condition="view/favorited" class="favoriting_option">
       你已经收藏了这个内容！
@@ -23,12 +23,18 @@
     $(document).ready(function(){
     $("#alreadyfavorited").on("click","button",function () {
             $.post($("#ajaxreq").attr("data-ajax-target") + "/undofavorite", function () {
-                location.reload();
+                var old = $("#current_favoriting span").val();
+                var newnum = (Number(old) - 1).toString();
+                $('"#current_favoriting span').html(newnum);
+                return false;                
                             });
             });
     $("#notyetfavorited").on("click","button",function () {
             $.post($("#ajaxreq").attr("data-ajax-target") + "/dofavorite", function () {
-                location.reload();
+                var old = $("#current_favoriting span").val();
+                var newnum = (Number(old) + 1).toString();
+                $('"#current_favoriting span').html(newnum);
+                return false;
          				   });                
             }); 
 
