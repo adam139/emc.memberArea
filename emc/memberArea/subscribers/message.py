@@ -33,14 +33,7 @@ def create_messagebox(obj,event):
     id = 'workspace'
     fd = createContentInContainer(root,"emc.memberArea.workspace",checkConstraints=False,id=id)
     fd.title = u'个人工作区'.encode("utf-8")
-    id = 'mentionmefolder'
-    item = createContentInContainer(fd,"emc.kb.mentionmefolder",checkConstraints=False,id=id)
-    item.title = '和我相关'
-    item.reindexObject()
-    id = 'feedsfolder'
-    item = createContentInContainer(fd,"emc.kb.feedsfolder",checkConstraints=False,id=id)
-    item.title = '系统通知'
-    item.reindexObject()                  
+                 
     id = 'messagebox'
     item = createContentInContainer(fd,"emc.memberArea.messagebox",checkConstraints=False,id=id)
     item.title = u'个人信箱'.encode("utf-8")
