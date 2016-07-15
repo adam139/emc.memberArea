@@ -14,5 +14,6 @@
   <object name="emc.memberArea.outputbox" meta_type="Dexterity FTI" />
   <object name="emc.memberArea.myfolder" meta_type="Dexterity FTI" /> 
   <object name="emc.memberArea.todo" meta_type="Dexterity FTI" />
+  <object name="emc.memberArea.todoitem" meta_type="Dexterity FTI" />
   <object name="emc.memberArea.favorite" meta_type="Dexterity FTI" />      	    
 </object>

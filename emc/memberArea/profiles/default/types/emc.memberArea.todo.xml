@@ -6,11 +6,12 @@
   <!-- Basic metadata -->
   <property name="title" i18n:translate="">todo</property>
   <property name="description"
-    i18n:translate="">todo content type</property>
+    i18n:translate="">todo container type</property>
 <property name="content_icon">++resource++emc.memberArea/images/calendar.png</property>
   <property name="global_allow">False</property>
   <property name="filter_content_types">True</property>  
-  <property name="allowed_content_types">   	   
+  <property name="allowed_content_types">
+  	<element value="emc.memberArea.todoitem"/>   	   
   </property>
   <property name="allow_discussion">False</property>
 

@@ -7,6 +7,7 @@ from plone.app.testing import TEST_USER_ID, login, TEST_USER_NAME, \
 from plone.testing.z2 import Browser
 import unittest as unittest
 from plone.namedfile.file import NamedImage
+from plone.app.textfield.value import RichTextValue
 import os
 import datetime
 
@@ -24,7 +25,21 @@ class TestView(unittest.TestCase):
         portal.invokeFactory('emc.memberArea.workspace', 'work1')
         portal['work1'].invokeFactory('emc.memberArea.messagebox', 'folder1')
         portal['work1'].invokeFactory('emc.memberArea.myfolder', 'my1')
-        portal['work1'].invokeFactory('emc.memberArea.todo', 'to1',title="todo items")
+        portal['work1'].invokeFactory('emc.memberArea.todo', 'to1',title="todo container")
+        portal['work1']['to1'].invokeFactory('emc.memberArea.todoitem', 'item1',
+                                             title="item1",
+                                             text = RichTextValue(
+            u"todoitem one",
+            'text/plain',
+            'text/html'
+        ))
+        portal['work1']['to1'].invokeFactory('emc.memberArea.todoitem', 'item2',
+                                             title="item2",
+                                             text = RichTextValue(
+            u"todoitem two",
+            'text/plain',
+            'text/html'
+        ))      
         portal['work1'].invokeFactory('emc.memberArea.favorite', 'fa1',title="favorite items")                
         portal['work1']['folder1'].invokeFactory('emc.memberArea.inputbox', 'input1')
         portal['work1']['folder1'].invokeFactory('emc.memberArea.outputbox', 'output1')
@@ -33,7 +48,7 @@ class TestView(unittest.TestCase):
 
         self.portal = portal  
 
-    def test_myfolder_view(self):
+    def test_todo_view(self):
 
         app = self.layer['app']
         portal = self.layer['portal']       
@@ -51,6 +66,25 @@ class TestView(unittest.TestCase):
         outstr = '<th class="col-md-4" i18n:translate="">name</th>'
 #         import pdb
 #         pdb.set_trace()        
+        self.assertTrue(outstr in browser.contents)
+
+    def test_todoitem_view(self):
+
+        app = self.layer['app']
+        portal = self.layer['portal']       
+        browser = Browser(app)
+        browser.handleErrors = False
+        browser.addHeader('Authorization', 'Basic %s:%s' % (TEST_USER_NAME, TEST_USER_PASSWORD,))
+        
+        import transaction
+        transaction.commit()
+        obj = portal['work1']['to1']['item1'].absolute_url()       
+        page = obj + '/@@todoitem_view'
+#        import pdb
+#        pdb.set_trace()
+        browser.open(page)
+        outstr ='todoitem one'
+       
         self.assertTrue(outstr in browser.contents)
 
     def test_myfolder_view(self):
