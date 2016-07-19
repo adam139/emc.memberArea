@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<registry>
+  <!--resource -->
+  <records prefix="plone.resources/iphone-style"
+            interface='Products.CMFPlone.interfaces.IResourceRegistry'>
+      <value key="js">++resource++emc.memberArea/iphone_style.js</value>
+      <value key="css">
+        <element>++resource++emc.memberArea/iphone_style.css</element>
+      </value>
+      <value key="deps">jquery</value>
+ </records>
+  <records prefix="plone.resources/load-more"
+            interface='Products.CMFPlone.interfaces.IResourceRegistry'>
+      <value key="js">++resource++emc.memberArea/ajaxload_more.js</value>
+      <value key="deps">jquery</value>
+ </records> 
+  <!-- Bundles -->
+
+</registry>
