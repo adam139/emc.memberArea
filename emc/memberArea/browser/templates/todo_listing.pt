@@ -1,18 +1,11 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:tal="http://xml.zope.org/namespaces/tal"
       xmlns:metal="http://xml.zope.org/namespaces/metal"
       metal:use-macro="here/main_template/macros/master"
       xmlns:i18n="http://xml.zope.org/namespaces/i18n"      
       i18n:domain="emc.memberArea">        
-<head>
-   <metal:block fill-slot="style_slot">
-       <link rel="stylesheet" type="text/css"
-            tal:define="navroot context/@@plone_portal_state/navigation_root_url"
-            tal:attributes="href string:${navroot}/++resource++emc.memberArea/member.css"
-            />
-   </metal:block>
-  </head>
+
 <body>
 <metal:main fill-slot="main">
     <tal:main-macro metal:define-macro="main">
@@ -34,7 +27,7 @@
             <th class="col-md-2" i18n:translate="">date</th>           
        	  </tr>
        		</thead>
-       		<div tal:omit-tag="" tal:define="itemlists python:view.getMessagebrains(0,10)">
+       		<div tal:omit-tag="" tal:define="itemlists python:view.getbrains(0,10)">
        		<tbody id="tablecontent" tal:condition="itemlists" tal:content="structure python:itemlists">
        	  </tbody>
            </div>
@@ -55,52 +48,8 @@
 		    		<div id="ajaxmore" class="btn btn-primary">更多</div>
 		    		</div>     
       </div>      
-      </section>
-          
+      </section>          
     </tal:main-macro>
 </metal:main>
-<metal:js fill-slot="javascript_bottom_slot">
-			  <script type="text/javascript">
-$(document).ready(function(){
-	$('#tablecontent').on('click','.iphone-style', function(){
-		checkboxID = '#' + $(this).attr('rel');
-		if ($(checkboxID)[0].checked == false) {
-			var action = $("#ajaxreq").attr('data-ajax-target');
-			var id = $(this).siblings('input').attr('id');
-			var state = $(this).siblings('input').attr('data-state');
-			var states = {'id': id,'state': state};	
-			$(this).animate({backgroundPosition: '0% 100%'},500);
-			$(checkboxID)[0].checked = true;
-			$(this).removeClass('off').addClass('on');			
-			$.post(action, states, function(result){
-				if (result) {
-
-				}
-				else {return false;}
-			}, 'json');
-		}else {
-			var action = $("#ajaxreq").attr('data-ajax-target');
-			var id = $(this).siblings('input').attr('id');
-			var state = $(this).siblings('input').attr('data-state');
-			var states = {'id': id,'state': state};
-			$(this).animate({backgroundPosition: '100% 0%'},500);
-			$(checkboxID)[0].checked = false;
-			$(this).removeClass('on').addClass('off');			
-			$.post(action, states, function(result){
-				if (result) {	
-			
-				}
-			else {return false;}
-			}, 'json');
-		}
-	});
-	})
-</script>
-	<script src="http://images.315ok.org/xtshzz/js/ajaxload_more.min.js">	  	
-	</script>
-	<script>
-		     $('[data-toggle="tooltip"]').tooltip() 
-	</script>			
-</metal:js>
 </body>
 </html>

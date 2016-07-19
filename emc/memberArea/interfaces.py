@@ -1,13 +1,23 @@
 #-*- coding: UTF-8 -*-
 from zope.component.interfaces import IObjectEvent
-from zope.interface import Interface
+from zope.interface import Interface,Attribute
 
 class IMemberAreaCreatedEvent(IObjectEvent):
-    """pass"""
+    """for current login user"""
 
+class IBackMemberAreaCreatedEvent(IObjectEvent):
+    """for back-end the user that had been created by program"""
+    
 class IMessageCreatedEvent(IObjectEvent):
-    """pass"""
-
+    """for create message"""
+    
+class ITodoitemWillCreateEvent(Interface):
+    """A event interface for 
+    create a Todoitem object in the specify member's todo folder 
+This is normal event (parameters event) not a object event"""
+    title = Attribute("title of the todoitem ")
+    userid = Attribute("userid that todoitem will be created under the user's workspace ")
+    text = Attribute("rich text description of the todoitem ")
 
 class IAddFavoriteEvent(IObjectEvent):
     """ Event add item favorite"""

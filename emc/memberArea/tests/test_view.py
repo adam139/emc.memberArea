@@ -60,10 +60,9 @@ class TestView(unittest.TestCase):
         transaction.commit()
         obj = portal['work1']['to1'].absolute_url()       
         page = obj + '/@@view'
-#        import pdb
-#        pdb.set_trace()
+
         browser.open(page)
-        outstr = '<th class="col-md-4" i18n:translate="">name</th>'
+        outstr = '<tr class="row" data-toggle="tooltip"'
 #         import pdb
 #         pdb.set_trace()        
         self.assertTrue(outstr in browser.contents)

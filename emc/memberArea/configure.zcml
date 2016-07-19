@@ -8,8 +8,6 @@
 
     <!-- Include configuration for dependencies listed in setup.py -->
     <includeDependencies package="." />
-    <!-- Grok the package to initialise schema interfaces and content classes -->
-
 
   <i18n:registerTranslations directory="locales" />
 
@@ -34,7 +32,11 @@
   <permission
       id="emc.memberArea.modify_message"
       title="emc.memberArea:Modify message"
-      />      
+      /> 
+  <permission
+      id="emc.memberArea.view_todoitem"
+      title="emc.memberArea:View todoitem"
+      />            
       
   <genericsetup:registerProfile
       name="default"

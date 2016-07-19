@@ -1,22 +1,23 @@
 #-*- coding: UTF-8 -*-
-from five import grok
+# from five import grok
 from plone.memoize.instance import memoize
 from zope.component import getMultiAdapter
+from Products.Five.browser import BrowserView
 from emc.policy import _
 from emc.project.content.project import IProject
 from emc.project.content.projectfolder import IProjectFolder
 from emc.theme.interfaces import IThemeSpecific
 from emc.memberArea.content.workspace import IWorkspace
 
-grok.templatedir('templates')
+# grok.templatedir('templates')
 
-class WorkspaceView(grok.View):
+class WorkspaceView(BrowserView):
      
-    grok.context(IWorkspace)
-    grok.template('workspace')
-    grok.name('view')
-    grok.layer(IThemeSpecific)
-    grok.require('emc.memberArea.view_message')   
+#     grok.context(IWorkspace)
+#     grok.template('workspace')
+#     grok.name('view')
+#     grok.layer(IThemeSpecific)
+#     grok.require('emc.memberArea.view_message')   
 
 
     def getContext(self,id,interfc=None):
@@ -46,5 +47,5 @@ class WorkspaceView(grok.View):
         fview = getMultiAdapter((context,self.request),name=view)
         # call getMemberList function output table
         # fetch 20 items roll
-        return fview.getMessagebrains(start=0,size=10,)
+        return fview.getbrains(start=0,size=10,)
             

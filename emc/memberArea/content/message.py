@@ -3,10 +3,12 @@ from five import grok
 from zope import schema
 from plone.directives import form, dexterity
 from plone.app.dexterity.behaviors.metadata import IBasic
+from plone.app.z3cform.widget import AjaxSelectFieldWidget
+from plone.autoform import directives
 
 from collective import dexteritytextindexer
 from collective.dexteritytextindexer.behavior import IDexterityTextIndexer
-from plone.formwidget.autocomplete.widget import AutocompleteMultiFieldWidget
+
 from emc.memberArea import _
     
 class IMessage(form.Schema):
@@ -22,15 +24,18 @@ class IMessage(form.Schema):
     text = schema.Text(
         title=_(u"message text"),
         required=True)
-    form.widget(sendto=AutocompleteMultiFieldWidget)    
+#     form.widget(sendto=AutocompleteMultiFieldWidget)    
     sendto = schema.Tuple(
         title=_(u"send to"),
-        value_type=schema.Choice(title=_(u"send to"),
-                                  source=u"plone.principalsource.Users"),
+        value_type=schema.TextLine(),
         required=True,
         missing_value=(), # important!
     )           
-
+    directives.widget(
+        'sendto',
+        AjaxSelectFieldWidget,
+        vocabulary='plone.principalsource.Users'
+    )
 @form.validator(field=IMessage['text'])
 def maxSize(value):
     if value is not None:

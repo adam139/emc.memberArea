@@ -1,12 +1,12 @@
 #-*- coding: UTF-8 -*-
 from plone import api
-from five import grok
 from z3c.form import field
 import json
 from zope.event import notify
 from Acquisition import aq_inner
 from Acquisition import aq_parent
-from zope.interface import Interface 
+from zope.interface import Interface
+from Products.Five.browser import BrowserView 
 from zope.component import getMultiAdapter
 from Products.CMFCore.utils import getToolByName
 from plone.app.layout.navigation.interfaces import INavigationRoot
@@ -14,28 +14,31 @@ from plone.memoize.instance import memoize
 from zope.interface import Interface
 from plone.directives import dexterity
 from plone.memoize.instance import memoize
+from Products.CMFPlone.resources import add_bundle_on_request
+from Products.CMFPlone.resources import add_resource_on_request
 from emc.memberArea.content.messagebox import IMessagebox
 from emc.memberArea.content.outputbox import IOutputbox
 from emc.memberArea.content.message import IMessage
 from emc.memberArea.content.todo import ITodo
+from emc.memberArea.content.todoitem import ITodoitem
 from emc.memberArea.content.favorite import IFavorite
 from emc.memberArea.content.myfolder import IMyfolder
 from emc.theme.interfaces import IThemeSpecific
 
 from emc.memberArea.events import FavoriteEvent,UnFavoriteEvent
 from emc.memberArea import sendMessage
-
-
 from emc.memberArea import _
 
-grok.templatedir('templates') 
 
-class BaseView(grok.View):
+class BaseView(BrowserView):
     "emc memberArea base view"
-    grok.context(Interface)
-    grok.template('base_view')    
-    grok.name('baseview')
-    grok.require('zope2.View')    
+  
+    
+    def __init__(self,context, request):
+        # Each view instance receives context and request as construction parameters
+        self.context = context
+        self.request = request
+        add_resource_on_request(self.request, 'load-more')    
     
     @memoize    
     def catalog(self):
@@ -57,21 +60,23 @@ class BaseView(grok.View):
         return self.pm().checkPermission(sendMessage,self.context)        
     
     def getMessageUrl(self):
-           
-        hf = self.pm().getHomeFolder(self.pm().getAuthenticatedMember().getId())
+# home folder of current user           
+        try:
+            hf = self.pm().getHomeFolder(self.pm().getAuthenticatedMember().getId())
 #         import pdb
 #         pdb.set_trace()
-        box = hf['workspace']['messagebox']['outputbox']
-        url = "%s/@@write_message" % box.absolute_url()     
+            box = hf['workspace']['messagebox']['outputbox']
+            url = "%s/@@write_message" % box.absolute_url()
+        except:
+            url = "virtualurlfortest"
+                     
         return url        
     
-
+    
+    
 class MessageboxView(BaseView):
     "emc memberArea messagebox view"
-    grok.context(IMessagebox)
-    grok.template('messagebox_ajax_view')
-    grok.name('ajax_view')
-    grok.require('emc.memberArea.view_message')
+
     
     def update(self):
         # Hide the editable-object border
@@ -80,13 +85,13 @@ class MessageboxView(BaseView):
     @memoize    
     def allitems(self):
         """fetch all messages"""               
-        messagebrains = self.catalog()(object_provides=IMessage.__identifier__, 
+        brains = self.catalog()(object_provides=IMessage.__identifier__, 
                                 path="/".join(self.context.getPhysicalPath()),
                                               sort_order="reverse",
                                               sort_on="created")       
-        return messagebrains
+        return brains
         
-    def getMessagebrains(self,start=0,size=0):
+    def getbrains(self,start=0,size=0):
         "return messags data"
 
         if size==0:
@@ -109,13 +114,15 @@ class MessageboxView(BaseView):
 #         import pdb
 #         pdb.set_trace()
         obj = self.context
-               #message content type just two status:"unreaded","readed"
+#has two child folder,one call "inputmessagebox" and the orther "outputbox" ,both are under the "messagbox" folder
+# computer outputbox path
         if obj.id == "messagebox":
             bsurl = obj.absolute_url() + "/outputbox"
         elif obj.id == "outputbox":
             bsurl = obj.absolute_url()
         else:
             bsurl = aq_parent(obj).absolute_url() + "/outputbox"
+        #write message form view
         answerurl = bsurl + "/@@write_message"       
         for i in braindata:
             objurl =  i.getURL()           
@@ -141,7 +148,7 @@ class MessageboxView(BaseView):
                                                           switch_ajax="%s/@@ajaxmemberstate" % objurl,
                                                           sender=sender,
                                                           register_date=register_date)
-
+               #message content type just two status:"unreaded","readed"
             if status == "unreaded":
                 out1 =""" 
                     <input type="checkbox" 
@@ -187,15 +194,10 @@ class MessageboxView(BaseView):
     def search_multicondition(self,query):  
         return self.catalog()(query)         
 
-class MessageAjaxSearch(grok.View):
-    """AJAX action for ajax_view.
+class MessageAjaxSearch(BrowserView):
+    """load more AJAX action for ajax_view.
     """    
 
-    grok.name('message_ajax')
-    grok.context(IMessagebox)
-    grok.layer(IThemeSpecific)
-    # ajax response view should be called just by manager permission?
-    grok.require('emc.memberArea.view_message')
           
     def render(self):
         searchview = getMultiAdapter((self.context, self.request),name=u"view")       
@@ -208,7 +210,7 @@ class MessageAjaxSearch(grok.View):
         # batch search 
 #         import pdb
 #         pdb.set_trace()        
-        outhtml = searchview.getMessagebrains(start=start,size=size)
+        outhtml = searchview.getbrains(start=start,size=size)
         data = self.output(start,size,totalnum, outhtml)
         self.request.response.setHeader('Content-Type', 'application/json')
         return json.dumps(data)       
@@ -220,19 +222,13 @@ class MessageAjaxSearch(grok.View):
          
 class MessageboxListView(MessageboxView):
      "emc memberArea messagebox load more view"
+
      
-     grok.context(IMessagebox)
-     grok.template('messagebox_listing')
-     grok.name('view')
-     grok.require('emc.memberArea.view_message')
-     
+# This is send to message box view 
 class outputboxListView(MessageboxView):
-     "emc memberArea messagebox view"
+     "emc memberArea send to messagebox view"
      
-     grok.context(IOutputbox)
-     grok.template('outputbox_listing')
-     grok.name('view')
-     grok.require('emc.memberArea.view_message')
+
      
      def outputList(self,braindata):
         """ output brains for template render
@@ -288,39 +284,46 @@ class outputboxListView(MessageboxView):
 class TodoListView(MessageboxView):
      "emc memberArea todo listing view"
      
-     grok.context(ITodo)
-     grok.template('todo_listing')
-     grok.name('view')
-     grok.require('zope2.View')
+
+
+     def __init__(self,context, request):
+        # Each view instance receives context and request as construction parameters
+        self.context = context
+        self.request = request
+        add_resource_on_request(self.request, 'load-more')
+        add_resource_on_request(self.request, 'iphone-style')
      
      @memoize    
      def allitems(self):
         """fetch all messages"""               
-        messagebrains = self.catalog()(review_status='pending', 
+        brains = self.catalog()(object_provides=ITodoitem.__identifier__, 
                                 path="/".join(self.context.getPhysicalPath()),
                                               sort_order="reverse",
                                               sort_on="created")       
-        return messagebrains     
-
-     def getMessagebrains(self,start=0,size=0):
+        return brains
+        
+     def getbrains(self,start=0,size=0):
         "return messags data"
-
 
         if size==0:
             braindata = self.allitems()
         else:
-            braindata = self.catalog()(review_status='pending',                                
+            braindata = self.catalog()(object_provides=ITodoitem.__identifier__, 
+                                path="/".join(self.context.getPhysicalPath()),
                                               sort_order="reverse",
                                               sort_on="created",
                                               b_start= start,
                                               b_size=size)            
         return self.outputList(braindata)     
+   
           
      def outputList(self,braindata):
         """ output brains for template render
         """
         outhtml = ""
         brainnum = len(braindata)
+
+        if brainnum == 0:return outhtml 
         obj = self.context
       
         for i in braindata:
@@ -353,10 +356,7 @@ class TodoListView(MessageboxView):
 class FavoriteListView(MessageboxView):
      "emc memberArea todo listing view"
      
-     grok.context(IFavorite)
-     grok.template('myfavoritefolder')
-     grok.name('view')
-     grok.require('emc.memberArea.view_favorite')
+
      
 
      def getFavoriteItemsId(self):
@@ -373,13 +373,13 @@ class FavoriteListView(MessageboxView):
      def allitems(self):
         """fetch all messages"""
                      
-        messagebrains = self.catalog()({
+        brains = self.catalog()({
                      'UID': self.getFavoriteItemsId(),
                      'sort_order': 'reverse',
                      'sort_on': 'modified'})      
-        return messagebrains     
+        return brains     
 
-     def getMessagebrains(self,start=0,size=0):
+     def getbrains(self,start=0,size=0):
         "return messags data"
 
         from plone import api
@@ -432,21 +432,18 @@ class FavoriteListView(MessageboxView):
 class MyfolderListView(MessageboxView):
      "emc memberArea personal netwok storage listing view"
      
-     grok.context(IMyfolder)
-     grok.template('myfolder')
-     grok.name('view')
-     grok.require('emc.memberArea.view_favorite')
+
 
      @memoize    
      def allitems(self):
         """fetch all messages"""               
-        messagebrains = self.catalog()( 
+        brains = self.catalog()( 
                                 path="/".join(self.context.getPhysicalPath()),
                                               sort_order="reverse",
                                               sort_on="created")       
-        return messagebrains
+        return brains
         
-     def getMessagebrains(self,start=0,size=0):
+     def getbrains(self,start=0,size=0):
         "return messags data"
 
         if size==0:
@@ -492,15 +489,10 @@ class MyfolderListView(MessageboxView):
             outhtml = "%s%s" %(outhtml,out)
         return outhtml    
 
-class MessageMore(grok.View):
+class MessageMore(BrowserView):
     """message list view AJAX action for click more. default batch size is 10.
     """
-   
-#     grok.context(IMessagebox)
-    grok.context(Interface)    
-    grok.name('more')
-    grok.layer(IThemeSpecific)
-    grok.require('zope2.View')            
+          
     
     def render(self):
         form = self.request.form
@@ -518,18 +510,14 @@ class MessageMore(grok.View):
             pending = favoritenum - nextstart          
 
         pending = "%s" % (pending)          
-        outhtml = more_view.getMessagebrains(formstart,10)            
+        outhtml = more_view.getbrains(formstart,10)            
         data = {'outhtml': outhtml,'pending':pending,'ifmore':ifmore}
     
         self.request.response.setHeader('Content-Type', 'application/json')
         return json.dumps(data)
     
-class MessageState(grok.View):
+class MessageState(BrowserView):
     "receive front end ajax data,change member workflow status"
-    grok.context(IMessage)
-    grok.name('ajaxmessagestate')
-    grok.layer(IThemeSpecific)
-    grok.require('zope2.View')
     
     def render(self):
         data = self.request.form
@@ -562,10 +550,6 @@ class MessageState(grok.View):
     
 class MessageView(BaseView):
     "emc memberArea message view"
-    grok.context(IMessage)
-    grok.template('message_view')
-    grok.name('view')
-    grok.require('emc.memberArea.view_message')
     
     def update(self):
         "update workflow status info"
@@ -576,12 +560,8 @@ class MessageView(BaseView):
             api.content.transition(obj=self.context, transition='done')
               
  
-class FavoriteAjax(grok.View):
+class FavoriteAjax(BrowserView):
     "receive front end ajax data,trigle UnFavoriteEvent"
-    grok.context(IFavorite)
-    grok.name('ajax')
-    grok.layer(IThemeSpecific)
-    grok.require('emc.memberArea.view_favorite')
     
     def render(self):
         data = self.request.form

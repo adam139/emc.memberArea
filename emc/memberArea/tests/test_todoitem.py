@@ -33,8 +33,6 @@ class DocumentIntegrationTest(unittest.TestCase):
             IDexterityFTI,
             name='emc.memberArea.todoitem')
         schema = fti.lookupSchema()
-        import pdb
-        pdb.set_trace()
         self.assertEqual(schema.getName(), 'ITodoitem')
 
     def test_fti(self):

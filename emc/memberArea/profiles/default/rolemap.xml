@@ -15,6 +15,9 @@
     </permission>
     <permission name="emc.memberArea:Modify message" acquire="True">
       <role name="Owner"/>            
-    </permission>       
+    </permission>
+    <permission name="emc.memberArea:View todoitem" acquire="True">
+      <role name="Owner"/>            
+    </permission>           
   </permissions>
 </rolemap>
