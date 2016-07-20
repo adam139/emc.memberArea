@@ -62,7 +62,8 @@ class TestView(unittest.TestCase):
 # Look up and invoke the view via traversal
         box = self.portal['work1']['folder1']
         view = box.restrictedTraverse('@@message_ajax')
-        result = view()
+
+        result = view.render()
         self.assertEqual(json.loads(result)['total'],2)
         
     def test_load_more(self):
@@ -88,7 +89,7 @@ class TestView(unittest.TestCase):
 # Look up and invoke the view via traversal
         box = self.portal['work1']['folder1']
         view = box.restrictedTraverse('@@more')
-        result = view()
+        result = view.render()
         self.assertEqual(json.loads(result)['ifmore'],1)        
 
     def test_message_status_switch(self):
@@ -106,7 +107,7 @@ class TestView(unittest.TestCase):
 # Look up and invoke the view via traversal
         box = self.portal['work1']['folder1']['input1']['message1']
         view = box.restrictedTraverse('@@ajaxmessagestate')
-        result = view()
+        result = view.render()
         self.assertEqual(json.loads(result),True)  
              
 

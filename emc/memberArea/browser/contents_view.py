@@ -197,8 +197,7 @@ class MessageboxView(BaseView):
 class MessageAjaxSearch(BrowserView):
     """load more AJAX action for ajax_view.
     """    
-
-          
+       
     def render(self):
         searchview = getMultiAdapter((self.context, self.request),name=u"view")       
         datadic = self.request.form
@@ -492,7 +491,6 @@ class MyfolderListView(MessageboxView):
 class MessageMore(BrowserView):
     """message list view AJAX action for click more. default batch size is 10.
     """
-          
     
     def render(self):
         form = self.request.form
@@ -563,6 +561,9 @@ class MessageView(BaseView):
 class FavoriteAjax(BrowserView):
     "receive front end ajax data,trigle UnFavoriteEvent"
     
+
+
+            
     def render(self):
         data = self.request.form
         uid = data['uid']      
