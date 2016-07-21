@@ -36,8 +36,8 @@ def create_todoitem(event):
     total = str(int(getattr(todofolder, 'todoitems', '0')) + 1)
     id = '%s' % total
     todofolder.todoitems = id
-    import pdb
-    pdb.set_trace()
+#     import pdb
+#     pdb.set_trace()
     todoitem = api.content.create(
                                   type="emc.memberArea.todoitem",
                                   title=title,

@@ -10,7 +10,7 @@
    <metal:block fill-slot="style_slot">
        <link rel="stylesheet" type="text/css"
             tal:define="navroot context/@@plone_portal_state/navigation_root_url"
-            tal:attributes="href string:${navroot}/++resource++emc.memberArea/member.css"
+            tal:attributes="href string:${navroot}/++resource++emc.memberArea/iphone_style.css"
             />
    </metal:block>
   </head>

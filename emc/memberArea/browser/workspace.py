@@ -3,6 +3,7 @@
 from plone.memoize.instance import memoize
 from zope.component import getMultiAdapter
 from Products.Five.browser import BrowserView
+from Products.CMFPlone.resources import add_bundle_on_request
 from emc.policy import _
 from emc.project.content.project import IProject
 from emc.project.content.projectfolder import IProjectFolder
@@ -13,11 +14,11 @@ from emc.memberArea.content.workspace import IWorkspace
 
 class WorkspaceView(BrowserView):
      
-#     grok.context(IWorkspace)
-#     grok.template('workspace')
-#     grok.name('view')
-#     grok.layer(IThemeSpecific)
-#     grok.require('emc.memberArea.view_message')   
+    def __init__(self,context, request):
+        # Each view instance receives context and request as construction parameters
+        self.context = context
+        self.request = request
+        add_bundle_on_request(self.request, 'workspace-legacy')   
 
 
     def getContext(self,id,interfc=None):

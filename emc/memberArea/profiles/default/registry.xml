@@ -9,11 +9,32 @@
       </value>
       <value key="deps">jquery</value>
  </records>
+  <records prefix="plone.resources/bootstrap-tabs"
+            interface='Products.CMFPlone.interfaces.IResourceRegistry'>
+      <value key="js">++plone++static/components/bootstrap/js/tab.js</value>
+
+      <value key="deps">jquery</value>
+ </records>
+  <records prefix="plone.resources/table-sort"
+            interface='Products.CMFPlone.interfaces.IResourceRegistry'>
+      <value key="js">++resource++emc.memberArea/table_sort.js</value>
+      <value key="deps">jquery</value>
+ </records>  
   <records prefix="plone.resources/load-more"
             interface='Products.CMFPlone.interfaces.IResourceRegistry'>
       <value key="js">++resource++emc.memberArea/ajaxload_more.js</value>
       <value key="deps">jquery</value>
  </records> 
   <!-- Bundles -->
-
+  <records prefix="plone.bundles/workspace-legacy"
+            interface='Products.CMFPlone.interfaces.IBundleRegistry'>    
+    <value key="depends">plone</value>
+    <value key="jscompilation">++resource++emc.memberArea/workspace.js</value>
+    <value key="last_compilation">2015-08-14 00:00:00</value>
+    <value key="compile">False</value>
+    <value key="enabled">False</value>
+    <value key="stub_js_modules">
+        <element>table-sort</element>
+    </value>    
+  </records>
 </registry>

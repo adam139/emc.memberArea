@@ -20,7 +20,8 @@ class TestView(unittest.TestCase):
         portal['work1'].invokeFactory('emc.memberArea.messagebox', 'folder1')
         portal['work1'].invokeFactory('emc.memberArea.myfolder', 'my1')
         portal['work1'].invokeFactory('emc.memberArea.todo', 'to1',title="todo items")
-        portal['work1'].invokeFactory('emc.memberArea.favorite', 'fa1',title="favorite items")                
+        portal['work1'].invokeFactory('emc.memberArea.favorite', 'fa1',title="favorite items")
+        portal['work1']['to1'].invokeFactory('emc.memberArea.todoitem', 'todoitem1')                
         portal['work1']['folder1'].invokeFactory('emc.memberArea.inputbox', 'input1')
         portal['work1']['folder1'].invokeFactory('emc.memberArea.outputbox', 'output1')
         portal['work1']['folder1']['input1'].invokeFactory('emc.memberArea.message', 'message1')
@@ -57,7 +58,35 @@ class TestView(unittest.TestCase):
         comment = wf.getInfoFor(dummy, 'comments')
         self.assertEqual(comment,'undo to init')        
        
-                              
+    def test_todoitem_workflow(self):
+        app = self.layer['app']
+        portal = self.layer['portal']
+        wf = getToolByName(portal, 'portal_workflow')
+
+        wt = wf.emc_member_todoitem_workflow
+        dummy = portal['work1']['to1']['todoitem1']
+
+        wf.notifyCreated(dummy)
+
+        chain = wf.getChainFor(dummy)
+
+        self.failUnless(chain[0] =='emc_member_todoitem_workflow')
+
+        review_state = wf.getInfoFor(dummy, 'review_state')
+        self.assertEqual(review_state,'unprocessed')        
+        wf.doActionFor(dummy, 'done', comment='foo' )
+
+## available variants is actor,action,comments,time, and review_history        
+        review_state = wf.getInfoFor(dummy, 'review_state')
+        self.assertEqual(review_state,'processed')
+        comment = wf.getInfoFor(dummy, 'comments')
+        self.assertEqual(comment,'foo')
+                 
+        wf.doActionFor(dummy, 'undo', comment='undo to init')
+        review_state = wf.getInfoFor(dummy, 'review_state')
+        self.assertEqual(review_state,'unprocessed')
+        comment = wf.getInfoFor(dummy, 'comments')
+        self.assertEqual(comment,'undo to init')                              
 
 
 

@@ -1,5 +1,5 @@
 "[Workflow]",,,,,,,,,,
-"Id:","message_send_workflow",,,,,,,,,
+"Id:","emc_member_send_message_workflow",,,,,,,,,
 "Title:","EMC message send workflow",,,,,,,,,
 "Description:","Allows EMC system member send message each orther",,,,,,,,,
 "Initial state:","unreaded",,,,,,,,,
