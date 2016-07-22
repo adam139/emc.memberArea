@@ -1,6 +1,7 @@
 #-*- coding: UTF-8 -*-
 from plone import api
 from z3c.form import field
+from five import grok
 import json
 from zope.event import notify
 from Acquisition import aq_inner
@@ -72,7 +73,18 @@ class BaseView(BrowserView):
                      
         return url        
     
-    
+    def tranVoc(self,value):
+        """ translate vocabulary value to title"""
+        translation_service = getToolByName(self.context,'translation_service')
+
+        title = translation_service.translate(
+                                                  value,
+                                                  domain='plone',
+                                                  mapping={},
+                                                  target_language='zh_CN',
+                                                  context=self.context,
+                                                  default='')
+        return title     
     
 class MessageboxView(BaseView):
     "emc memberArea messagebox view"
@@ -194,10 +206,14 @@ class MessageboxView(BaseView):
     def search_multicondition(self,query):  
         return self.catalog()(query)         
 
-class MessageAjaxSearch(BrowserView):
+class MessageAjaxSearch(grok.View):
     """load more AJAX action for ajax_view.
     """    
-       
+    grok.context(IMessagebox)
+    grok.name('message_ajax')
+    grok.layer(IThemeSpecific)
+    grok.require('emc.memberArea.view_message')
+           
     def render(self):
         searchview = getMultiAdapter((self.context, self.request),name=u"view")       
         datadic = self.request.form
@@ -321,35 +337,57 @@ class TodoListView(MessageboxView):
         """
         outhtml = ""
         brainnum = len(braindata)
-
-        if brainnum == 0:return outhtml 
-        obj = self.context
+#         import pdb
+#         pdb.set_trace()
       
         for i in braindata:
             objurl =  i.getURL()           
             id = i.id            
             name = i.Title # message object's title
-            description = i.Description
-            sender = i.Creator
+#             sender = i.Creator
             register_date = i.created.strftime('%Y-%m-%d')
-#             status = i.review_state                          
-                        
+            status = i.review_state                         
+            delurl = "%s/delete_confirmation" % objurl                        
             out = """<tr class="row">
-                  <td class="col-md-4">
+                  <td class="col-md-6">
                       <a href="%(url)s">
                          <span>%(name)s</span>
                       </a>
-                  </td>                
-                  <td class="col-md-6 text-left">%(description)s
-                  </td>
+                  </td>               
                   <td class="col-md-2">%(register_date)s
-                  </td>""" % dict(url=objurl,
+                  </td>
+                  <td class="col-md-2 handler" data-target="%(switch_ajax)s">""" % dict(url=objurl,
                                                           name=name,
-                                                          description=description,
-                                                          register_date=register_date)                 
-                                     
-         
-            outhtml = "%s%s" %(outhtml,out)
+                                                          switch_ajax="%s/@@ajax_todoitem_state" % objurl,
+                                                          register_date=register_date)
+               #todoitem content type just two status:"unprocessed","processed"
+            if status == "unprocessed":
+                out1 =""" 
+                    <input type="checkbox" 
+                                  id="%(id)s"
+                                  data-state=%(status)s 
+                                  class="iphone-style-checkbox hidden" 
+                                  checked="checked"/>
+                                  <span rel="%(id)s" class="iphone-style on">&nbsp;</span>""" \
+                                   % dict (id=id,status=status)
+            else:
+                out1 = """
+                    <input type="checkbox" 
+                        id="%(id)s"
+                        data-state=%(status)s 
+                        class="iphone-style-checkbox hidden" />
+                        <span rel="%(id)s" class="iphone-style off">&nbsp;</span>""" \
+                        % dict (id=id,status=status)                                       
+            out2 = """</td>
+                  <td class="col-md-2">                                   
+                                  <div class="col-md-6 text-center">
+                                          <a href="%(delurl)s" class="link-overlay btn btn-danger">
+                                      <i class="icon-trash icon-white"></i>删除</a>
+                                  </div>
+                                    
+                   </td>          
+                  </tr>""" % dict(delurl=delurl)           
+            outhtml = "%s%s%s%s" %(outhtml,out,out1,out2)
         return outhtml
 
 class FavoriteListView(MessageboxView):
@@ -488,10 +526,14 @@ class MyfolderListView(MessageboxView):
             outhtml = "%s%s" %(outhtml,out)
         return outhtml    
 
-class MessageMore(BrowserView):
+class MessageMore(grok.View):
     """message list view AJAX action for click more. default batch size is 10.
     """
-    
+    grok.context(Interface)
+    grok.name('more')
+    grok.layer(IThemeSpecific)
+    grok.require('zope2.View')
+        
     def render(self):
         form = self.request.form
         formst = form['formstart']
@@ -514,8 +556,12 @@ class MessageMore(BrowserView):
         self.request.response.setHeader('Content-Type', 'application/json')
         return json.dumps(data)
     
-class MessageState(BrowserView):
+class MessageState(grok.View):
     "receive front end ajax data,change member workflow status"
+    grok.context(IMessage)
+    grok.name('ajaxmessagestate')
+    grok.layer(IThemeSpecific)
+    grok.require('emc.memberArea.view_message')     
     
     def render(self):
         data = self.request.form
@@ -545,7 +591,41 @@ class MessageState(BrowserView):
         obj.reindexObject()
         self.request.response.setHeader('Content-Type', 'application/json')
         return json.dumps(result)                          
+ 
+class TodoitemState(grok.View):
+    "receive front end ajax data,change todoitem workflow status"
     
+    grok.context(ITodoitem)
+    grok.name('ajax_todoitem_state')
+    grok.require('zope2.View')    
+    
+    def render(self):
+        data = self.request.form
+        id = data['id']
+        state = data['state']
+#         import pdb
+#         pdb.set_trace()       
+        obj = self.context        
+        portal_workflow = getToolByName(obj, 'portal_workflow')
+# obj current status        
+        if state == "unprocessed" : # this is a new created todoitem 
+            try:
+                portal_workflow.doActionFor(obj, 'done')                   
+                result = True
+            except:
+                result = False
+        elif state == "processed":
+            try:
+                portal_workflow.doActionFor(obj, 'undo')
+                result = True
+            except:
+                result = False
+        else:
+            result = False         
+        obj.reindexObject()
+        self.request.response.setHeader('Content-Type', 'application/json')
+        return json.dumps(result)
+       
 class MessageView(BaseView):
     "emc memberArea message view"
     
@@ -558,9 +638,12 @@ class MessageView(BaseView):
             api.content.transition(obj=self.context, transition='done')
               
  
-class FavoriteAjax(BrowserView):
+class FavoriteAjax(grok.View):
     "receive front end ajax data,trigle UnFavoriteEvent"
-    
+    grok.context(IFavorite)
+    grok.name('ajax')
+    grok.layer(IThemeSpecific)
+    grok.require('zope2.View')    
 
 
             

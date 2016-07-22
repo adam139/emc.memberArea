@@ -48,13 +48,7 @@
       template="templates/messagebox_ajax_view.pt"
       permission="emc.memberArea.view_message"
       />
-  <browser:page
-      name="message_ajax"
-      class=".contents_view.MessageAjaxSearch"
-      for="emc.memberArea.content.messagebox.IMessagebox"
-  	  layer="emc.theme.interfaces.IThemeSpecific"
-      permission="emc.memberArea.view_message"
-      />
+
   <browser:page
       name="view"
       class=".workspace.WorkspaceView"
@@ -120,6 +114,15 @@
       menu="plone_displayviews"
       title="message view"
       />
+
+<!--
+  <browser:page
+      name="message_ajax"
+      class=".contents_view.MessageAjaxSearch"
+      for="emc.memberArea.content.messagebox.IMessagebox"
+  	  layer="emc.theme.interfaces.IThemeSpecific"
+      permission="emc.memberArea.view_message"
+      />
   <browser:page
       name="more"
       class=".contents_view.MessageMore"
@@ -133,14 +136,24 @@
       layer="emc.theme.interfaces.IThemeSpecific"
       for="emc.memberArea.content.message.IMessage"
       permission="emc.memberArea.view_message"
-      />            
+      />
+
+  <browser:page
+      name="ajax_todoitem_state"
+      class=".contents_view.TodoitemState"
+      layer="emc.theme.interfaces.IThemeSpecific"
+      for="emc.memberArea.content.todoitem.ITodoitem"
+      permission="emc.memberArea.view_todoitem"
+      />
+                 
   <browser:page
       name="ajax"
       class=".contents_view.FavoriteAjax"
       for="emc.memberArea.content.favorite.IFavorite"
   	  layer="emc.theme.interfaces.IThemeSpecific"
       permission="emc.memberArea.view_favorite"
-      />                                      
+      />
+      -->                                             
   <browser:page
       name="todoitem_view"
       for="emc.memberArea.content.todoitem.ITodoitem"

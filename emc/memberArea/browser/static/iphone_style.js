@@ -4,31 +4,34 @@ require([
   'use strict';
 $(document).ready(function(){
 	$('#tablecontent').on('click','.iphone-style', function(){
-		checkboxID = '#' + $(this).attr('rel');
-		if ($(checkboxID)[0].checked == false) {
-//			var action = $("#ajaxreq").attr('data-ajax-target');
-			var action = $(this).parent().attr('data-target');
-			var id = $(this).siblings('input').attr('id');
-			var state = $(this).siblings('input').attr('data-state');
-			var states = {'id': id,'state': state};	
+		var id = $(this).attr('rel');
+		var checkboxID = '#' + id;
+		var action = $(this).parent().attr('data-target');
+		var state = $(checkboxID).attr('data-state');
+		var states = {'id': id,'state': state};
+		if ($(checkboxID)[0].checked == true) {	
 			$(this).animate({backgroundPosition: '0% 100%'},500);
-			$(checkboxID)[0].checked = true;
-			$(this).removeClass('off').addClass('on');			
+			$(checkboxID)[0].checked = false;
+			$(this).removeClass('on').addClass('off');			
 			$.post(action, states, function(result){
 				if (result) {
+					$(checkboxID).attr('data-state','processed');
+					var old = $('#todo').html();
+					var newnum = (Number(old) - 1).toString();
+					$('#todo').html(newnum);					    					
 				}
 				else {return false;}
 			}, 'json');
 		}else {
-			var action = $("#ajaxreq").attr('data-ajax-target');
-			var id = $(this).siblings('input').attr('id');
-			var state = $(this).siblings('input').attr('data-state');
-			var states = {'id': id,'state': state};
 			$(this).animate({backgroundPosition: '100% 0%'},500);
-			$(checkboxID)[0].checked = false;
-			$(this).removeClass('on').addClass('off');			
+			$(checkboxID)[0].checked = true;
+			$(this).removeClass('off').addClass('on');			
 			$.post(action, states, function(result){
-				if (result) {			
+				if (result) {
+					$(checkboxID).attr('data-state','unprocessed');
+					var old = $('#todo').html();
+					var newnum = (Number(old) + 1).toString();
+					$('#todo').html(newnum); 								
 				}
 			else {return false;}
 			}, 'json');
