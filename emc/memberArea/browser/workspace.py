@@ -4,6 +4,7 @@ from plone.memoize.instance import memoize
 from zope.component import getMultiAdapter
 from Products.Five.browser import BrowserView
 from Products.CMFPlone.resources import add_bundle_on_request
+from Products.CMFPlone.resources import add_resource_on_request
 from emc.policy import _
 from emc.project.content.project import IProject
 from emc.project.content.projectfolder import IProjectFolder
@@ -18,7 +19,8 @@ class WorkspaceView(BrowserView):
         # Each view instance receives context and request as construction parameters
         self.context = context
         self.request = request
-        add_bundle_on_request(self.request, 'workspace-legacy')   
+        add_bundle_on_request(self.request, 'workspace-legacy')
+        add_resource_on_request(self.request, 'iphone-style')   
 
 
     def getContext(self,id,interfc=None):

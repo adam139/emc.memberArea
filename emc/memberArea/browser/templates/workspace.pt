@@ -16,7 +16,7 @@
          <div class="col-xs-12 col-md-12 tabPortlet">
 				<div role="tabpanel" class="row">
   				<!-- Nav tabs -->
-  				<ul  class="nav nav-tabs row" role="tablist">
+  				<ul class="nav nav-tabs row" role="tablist">
   					<!-- 
     				<li role="presentation" class="col-xs-3">
     					<a class="text-center" href="#message" aria-controls="message" role="tab" data-toggle="tab"
@@ -24,12 +24,12 @@
     				</li>
     				-->
     				<li role="presentation" class="active col-xs-4">
-    					<a class="text-center" href="#todo" aria-controls="todo" role="tab" data-toggle="tab"
+    					<a class="text-center" href="#todoitems" aria-controls="todoitems" role="tab" data-toggle="tab"
     						tal:attributes="data-js-target python:p + '/todo/@@view'">待办事宜</a>
     				</li>
     				<li role="presentation" class="col-xs-4">
     					<a class="text-center" href="#myfolder" aria-controls="myfolder" role="tab" data-toggle="tab"
-    						tal:attributes="data-js-target python:p + '/myfolder/fold_contents'">我的网盘</a>
+    						tal:attributes="data-js-target python:p + '/myfolder/@@folder_contents'">我的网盘</a>
     				</li>
     				<li role="presentation" class="col-xs-4">
     					<a class="text-center" href="#favorite" aria-controls="favorite" role="tab" data-toggle="tab"
@@ -38,7 +38,7 @@
     				</ul>
   					<!-- Tab panes start-->
   				<div class="tab-content">
-  					<!-- 
+  				<!--	 
    				<div role="tabpanel" class="tab-pane" id="message">
          		<ul class="tabcontent-lists" tal:define="inbox python:view.getGrandson('messagebox','inputbox')">
         			<table class="table table-striped table-bordered table-condensed listing col-md-12">
@@ -59,18 +59,19 @@
     			</ul>    	
     			</div>
     			-->
-    			<div role="tabpanel" class="tab-pane active" id="todo">
+    			<div role="tabpanel" class="tab-pane active" id="todoitems">
           		<ul class="tabcontent-lists" tal:define="todo python:view.getChild('todo')">
         			<table class="table table-striped table-bordered table-condensed listing col-md-12">
        				<thead>
-       					<tr class="row" data-toggle="tooltip" title="点击排序">
-            				<th class="col-md-4" i18n:translate="">name</th>
-            				<th class="col-md-6" i18n:translate="">description</th>
-            				<th class="col-md-2" i18n:translate="">date</th>           
-       	  				</tr>
+       				<tr class="row" data-toggle="tooltip" title="点击排序">
+            		<th class="col-md-6" i18n:translate="">name</th>
+            		<th class="col-md-2" i18n:translate="">date</th>
+            		<th class="col-md-2">状态切换</th>
+            		<th class="col-md-2" i18n:translate="">operates</th>              
+       	  			</tr>
        				</thead>
        				<div tal:omit-tag="" tal:define="itemlists python:view.geTable(todo,'view')">
-       				<tbody id="todocontent" tal:condition="itemlists" tal:content="structure python:itemlists">
+       				<tbody id="tablecontent" tal:condition="itemlists" tal:content="structure python:itemlists">
        	  			</tbody>
            			</div>
           			</table>       			    				
