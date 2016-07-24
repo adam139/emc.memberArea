@@ -19,6 +19,10 @@ def create_todoitem(event):
 # fetch parameters of the event instance    
     title = event.title
     userid = event.userid
+    sender = event.sender
+    sender = api.user.get(userid=sender).fullname or sender
+    description = u"消息来自于：".encode("utf-8")
+    description = "%s%s" % (description,sender)
     text = event.text
 #     import pdb
 #     pdb.set_trace()    
@@ -41,6 +45,7 @@ def create_todoitem(event):
     todoitem = api.content.create(
                                   type="emc.memberArea.todoitem",
                                   title=title,
+                                  description = description,
                                   id = id,
                                   container=todofolder)   
 

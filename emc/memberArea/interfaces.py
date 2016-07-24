@@ -17,6 +17,7 @@ class ITodoitemWillCreateEvent(Interface):
 This is normal event (parameters event) not a object event"""
     title = Attribute("title of the todoitem ")
     userid = Attribute("userid that todoitem will be created under the user's workspace ")
+    sender = Attribute("who lunch the event ")
     text = Attribute("rich text description of the todoitem ")
 
 class IAddFavoriteEvent(IObjectEvent):

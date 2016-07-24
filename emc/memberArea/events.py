@@ -34,7 +34,8 @@ class TodoitemWillCreateEvent(object):
     """todoitem envent,subscribers of the event will create a todoitem"""
     interface.implements(ITodoitemWillCreateEvent)
     
-    def __init__(self,title,userid,text):
+    def __init__(self,title,userid,sender,text):
         self.title = title
         self.userid = userid
+        self.sender = sender
         self.text = text                     

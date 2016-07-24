@@ -157,7 +157,7 @@ class MessageboxView(BaseView):
                   </td>
                   <td class="col-md-2 handler" data-target="%(switch_ajax)s">""" % dict(url=objurl,
                                                           name=name,
-                                                          switch_ajax="%s/@@ajaxmemberstate" % objurl,
+                                                          switch_ajax="%s/@@ajaxmessagestate" % objurl,
                                                           sender=sender,
                                                           register_date=register_date)
                #message content type just two status:"unreaded","readed"
@@ -367,7 +367,7 @@ class TodoListView(MessageboxView):
                                   id="%(id)s"
                                   data-state=%(status)s 
                                   class="iphone-style-checkbox hidden" 
-                                  checked="checked"/>
+                                  checked="checked" />
                                   <span rel="%(id)s" class="iphone-style on">&nbsp;</span>""" \
                                    % dict (id=id,status=status)
             else:
@@ -526,8 +526,8 @@ class MyfolderListView(MessageboxView):
             outhtml = "%s%s" %(outhtml,out)
         return outhtml    
 
-class MessageMore(grok.View):
-    """message list view AJAX action for click more. default batch size is 10.
+class More(grok.View):
+    """list view AJAX action for click more. default batch size is 10.
     """
     grok.context(Interface)
     grok.name('more')
@@ -549,7 +549,8 @@ class MessageMore(grok.View):
             ifmore = 0  
             pending = favoritenum - nextstart          
 
-        pending = "%s" % (pending)          
+        pending = "%s" % (pending)
+         
         outhtml = more_view.getbrains(formstart,10)            
         data = {'outhtml': outhtml,'pending':pending,'ifmore':ifmore}
     

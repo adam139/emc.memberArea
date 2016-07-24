@@ -27,6 +27,8 @@ class Allcontents(unittest.TestCase):
     def test_item_types(self):
         self.assertEqual(self.portal['work1']['folder1'].id,'folder1')
         self.assertEqual(self.portal['work1']['my1'].id,'my1')
+#         import pdb
+#         pdb.set_trace()
         self.assertEqual(self.portal['work1']['to1'].id,'to1')
         self.assertEqual(self.portal['work1']['to1']['item1'].id,'item1')
         self.assertEqual(self.portal['work1']['to1']['item2'].id,'item2')

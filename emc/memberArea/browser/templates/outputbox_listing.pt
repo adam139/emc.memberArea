@@ -4,21 +4,13 @@
       xmlns:metal="http://xml.zope.org/namespaces/metal"
       metal:use-macro="here/main_template/macros/master"
       xmlns:i18n="http://xml.zope.org/namespaces/i18n"      
-      i18n:domain="emc.memberArea">        
-<head>
-   <metal:block fill-slot="style_slot">
-       <link rel="stylesheet" type="text/css"
-            tal:define="navroot context/@@plone_portal_state/navigation_root_url"
-            tal:attributes="href string:${navroot}/++resource++emc.memberArea/member.css"
-            />
-   </metal:block>
-  </head>
+      i18n:domain="emc.memberArea">      
 <body>
 <metal:main fill-slot="main">
     <tal:main-macro metal:define-macro="main">
        <section id="profile">
 		<div id="ajaxreq" style="display: none" 
-			tal:attributes="data-ajax-target python:context.absolute_url() + '/@@ajaxmemberstate'"></div>
+			tal:attributes="data-ajax-target python:context.absolute_url() + '/@@more'"></div>
      <div class="row action-bar" tal:condition="python:view.canbeSend()">
 		 <div class="col-md-3 col-md-offset-9">
 			<div id="base_view">
@@ -33,7 +25,7 @@
        <div class="page-header">
            <h3><strong i18n:translate="">personal message box information</strong></h3>            
        </div>  
-       <div class="row" id="ajaxdisplay" tal:attributes="data-ajax-target string:${context/absolute_url}/@@membermore">
+       <div class="row" id="ajaxdisplay" tal:attributes="data-ajax-target string:${context/absolute_url}/@@more">
        	<table class="table table-striped table-bordered table-condensed listing col-md-12">
        		<thead>
        		<tr class="row" data-toggle="tooltip" title="点击排序">
@@ -68,15 +60,5 @@
           
     </tal:main-macro>
 </metal:main>
-<metal:js fill-slot="javascript_bottom_slot">
-			  <script type="text/javascript">
-$(document).ready(function(){
-	     $('[data-toggle="tooltip"]').tooltip() 
-	})
-</script>
-	<script src="http://images.315ok.org/xtshzz/js/ajaxload_more.min.js">	  	
-	</script>
-		
-</metal:js>
 </body>
 </html>

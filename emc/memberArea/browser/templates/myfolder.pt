@@ -9,7 +9,7 @@
    <metal:block fill-slot="style_slot">
        <link rel="stylesheet" type="text/css"
             tal:define="navroot context/@@plone_portal_state/navigation_root_url"
-            tal:attributes="href string:${navroot}/++resource++emc.memberArea/member.css"
+            tal:attributes="href string:${navroot}/++resource++emc.memberArea/iphone_style.css"
             />
    </metal:block>
   </head>
@@ -32,7 +32,7 @@
             <th class="col-md-2" i18n:translate="">operates</th>              
        	  </tr>
        		</thead>
-       		<div tal:omit-tag="" tal:define="itemlists python:view.getMessagebrains(0,10)">
+       		<div tal:omit-tag="" tal:define="itemlists python:view.getbrains(0,10)">
        		<tbody id="tablecontent" tal:condition="itemlists" tal:content="structure python:itemlists">
        	  </tbody>
            </div>
