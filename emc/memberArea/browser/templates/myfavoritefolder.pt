@@ -5,14 +5,7 @@
       metal:use-macro="here/main_template/macros/master"
       xmlns:i18n="http://xml.zope.org/namespaces/i18n"      
       i18n:domain="emc.memberArea">        
-<head>
-   <metal:block fill-slot="style_slot">
-       <link rel="stylesheet" type="text/css"
-            tal:define="navroot context/@@plone_portal_state/navigation_root_url"
-            tal:attributes="href string:${navroot}/++resource++emc.memberArea/iphone_style.css"
-            />
-   </metal:block>
-  </head>
+
 <body>
 <metal:main fill-slot="main">
     <tal:main-macro metal:define-macro="main">
@@ -20,7 +13,7 @@
 		<div id="ajaxreq" style="display: none" 
 			tal:attributes="data-ajax-target python:context.absolute_url() + '/@@ajax'"></div>
        	
-       <div class="page-header">
+       <div class="text-center page-header">
            <h3><strong i18n:translate="">personal favorite information</strong></h3>            
        </div>  
        <div class="row" id="ajaxdisplay" tal:attributes="data-ajax-target string:${context/absolute_url}/@@more">
@@ -58,9 +51,7 @@
     </tal:main-macro>
 </metal:main>
 <metal:js fill-slot="javascript_bottom_slot">
-		<script src="http://images.315ok.org/xtshzz/js/ajaxload_more.min.js">	  	
-	</script>
-			  <script type="text/javascript">
+<script type="text/javascript">
 $(document).ready(function(){
 $('#tablecontent').on('click','.unfavorite', function(){
 		  var uid = $(this).attr('rel');
