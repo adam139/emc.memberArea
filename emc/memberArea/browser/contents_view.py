@@ -354,9 +354,9 @@ class TodoListView(MessageboxView):
                          <span>%(name)s</span>
                       </a>
                   </td>               
-                  <td class="col-md-2">%(register_date)s
+                  <td class="col-md-2 text-center">%(register_date)s
                   </td>
-                  <td class="col-md-2 handler" data-target="%(switch_ajax)s">""" % dict(url=objurl,
+                  <td class="col-md-2 handler text-center" data-target="%(switch_ajax)s">""" % dict(url=objurl,
                                                           name=name,
                                                           switch_ajax="%s/@@ajax_todoitem_state" % objurl,
                                                           register_date=register_date)
@@ -380,7 +380,7 @@ class TodoListView(MessageboxView):
                         % dict (id=id,status=status)                                       
             out2 = """</td>
                   <td class="col-md-2">                                   
-                                  <div class="col-md-6 text-center">
+                                  <div class="text-center">
                                           <a href="%(delurl)s" class="link-overlay btn btn-danger">
                                       <i class="icon-trash icon-white"></i>删除</a>
                                   </div>
@@ -443,7 +443,7 @@ class FavoriteListView(MessageboxView):
             objurl =  i.getURL()           
             id = i.id
             uid = i.UID            
-            name = i.Title # message object's title
+            name = i.Title # favorite object's title
             description = i.Description
             sender = i.Creator
             register_date = i.created.strftime('%Y-%m-%d')
@@ -455,12 +455,12 @@ class FavoriteListView(MessageboxView):
                          <span>%(name)s</span>
                       </a>
                   </td>                
-                  <td class="col-md-2 text-left">%(register_date)s
+                  <td class="col-md-2 text-center">%(register_date)s
                   </td>
-                  <td class="col-md-2 unfavorite" rel="%(uid)s" data-ajax-target="%(url)s">
+                  <td class="col-md-2 unfavorite text-center" rel="%(uid)s" data-ajax-target="%(url)s">
                   <a href="#" class="link-overlay btn btn-danger">
-                                      <i class="icon-trash icon-white"></i>删除</a>
-                  </td>""" % dict(url=objurl,name=name,uid=uid,register_date=register_date)                 
+                                      <i class="icon-trash icon-white"></i>取消收藏</a>
+                  </td></tr>""" % dict(url=objurl,name=name,uid=uid,register_date=register_date)                 
                                      
          
             outhtml = "%s%s" %(outhtml,out)
@@ -517,9 +517,9 @@ class MyfolderListView(MessageboxView):
                          <span>%(name)s</span>
                       </a>
                   </td>                
-                  <td class="col-md-2 text-left">%(register_date)s
+                  <td class="col-md-2 text-center">%(register_date)s
                   </td>
-                  <td class="col-md-2">
+                  <td class="col-md-2 text-center">
                   <a href="%(delurl)s" class="link-overlay btn btn-danger">
                                       <i class="icon-trash icon-white"></i>删除</a>
                   </td>""" % dict(url=objurl,name=name,delurl=delurl,register_date=register_date)                                                             

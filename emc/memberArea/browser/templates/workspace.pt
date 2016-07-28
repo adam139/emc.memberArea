@@ -65,9 +65,9 @@
        				<thead>
        				<tr class="row" data-toggle="tooltip" title="点击排序">
             		<th class="col-md-6" i18n:translate="">name</th>
-            		<th class="col-md-2" i18n:translate="">date</th>
-            		<th class="col-md-2">状态切换</th>
-            		<th class="col-md-2" i18n:translate="">operates</th>              
+            		<th class="col-md-2 text-center" i18n:translate="">date</th>
+            		<th class="col-md-2 text-center">状态切换</th>
+            		<th class="col-md-2 text-center" i18n:translate="">operates</th>              
        	  			</tr>
        				</thead>
        				<div tal:omit-tag="" tal:define="itemlists python:view.geTable(todo,'view')">
@@ -83,8 +83,8 @@
        				<thead>
        					<tr class="row" data-toggle="tooltip" title="点击排序">
             				<th class="col-md-8" i18n:translate="">name</th>
-            				<th class="col-md-2" i18n:translate="">date</th>
-            				<th class="col-md-2" i18n:translate="">operates</th>              
+            				<th class="col-md-2 text-center" i18n:translate="">date</th>
+            				<th class="col-md-2 text-center" i18n:translate="">operates</th>              
        	  				</tr>
        				</thead>
        				<div tal:omit-tag="" tal:define="itemlists python:view.geTable(myfolder,'view')">
@@ -100,8 +100,8 @@
        				<thead>
        					<tr class="row" data-toggle="tooltip" title="点击排序">
             				<th class="col-md-8" i18n:translate="">name</th>
-            				<th class="col-md-2" i18n:translate="">date</th>
-            				<th class="col-md-2" i18n:translate="">operates</th>              
+            				<th class="col-md-2 text-center" i18n:translate="">date</th>
+            				<th class="col-md-2 text-center" i18n:translate="">operates</th>              
        	  				</tr>
        				</thead>
        				<div tal:omit-tag="" tal:define="itemlists python:view.geTable(favorite,'view');
@@ -124,6 +124,23 @@
 						    
       </div>  <!-- end of container -->                                     		
     </tal:main-macro>
-</metal:main>  
+</metal:main>
+<metal:js fill-slot="javascript_bottom_slot">
+<script type="text/javascript">
+$(document).ready(function(){
+$('#tablecontent').on('click','.unfavorite', function(){
+		  //var uid = $(this).attr('rel');
+		  var action = $(this).attr('data-ajax-target') + '/undofavorite';
+			var states = {'uid': uid};
+			$(this).addClass('going');			
+			$.post(action,function(){
+				$('.going').parent().remove();
+				return false;
+				}
+			}, 'json');		
+	});	
+	})
+</script>		
+</metal:js>  
 </body>
 </html>
