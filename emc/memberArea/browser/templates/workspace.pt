@@ -137,7 +137,7 @@ $('#tablecontent').on('click','.unfavorite', function(){
 				$('.going').parent().remove();
 				return false;
 				}
-			}, 'json');		
+			);		
 	});	
 	})
 </script>		

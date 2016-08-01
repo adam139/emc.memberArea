@@ -54,15 +54,13 @@
 <script type="text/javascript">
 $(document).ready(function(){
 $('#tablecontent').on('click','.unfavorite', function(){
-		  //var uid = $(this).attr('rel');
 		  var action = $(this).attr('data-ajax-target') + '/undofavorite';
-			var states = {'uid': uid};
 			$(this).addClass('going');			
 			$.post(action,function(){
 				$('.going').parent().remove();
 				return false;
 				}
-			}, 'json');		
+			);		
 	});	
 	})
 </script>		
