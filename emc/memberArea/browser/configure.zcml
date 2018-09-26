@@ -27,12 +27,12 @@
   permission="emc.memberArea.do_favorite"
   />
 
-<browser:page
-  name="undofavorite"
-  for="emc.memberArea.interfaces.IFavoritable"
-  layer="..interfaces.IFavoritableLayer"
-  class=".favorite_action.UnFavorite"
-  permission="emc.memberArea.do_favorite"
+  <browser:page
+      name="undofavorite"
+      for="emc.memberArea.interfaces.IFavoritable"
+      layer="..interfaces.IFavoritableLayer"
+      class=".favorite_action.UnFavorite"
+      permission="emc.memberArea.do_favorite"
   />
   <browser:page
       name="baseview"
