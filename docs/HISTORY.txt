@@ -1,6 +1,6 @@
 Changelog
 =========
-
+2018-09-26 create dev1.2 branch
 1.0dev (unreleased)
 -------------------
 
