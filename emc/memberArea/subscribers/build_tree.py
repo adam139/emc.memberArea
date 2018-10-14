@@ -23,8 +23,12 @@ def chown(context,userid):
 def login_create_personal_tree(obj,event):
     """创建个人信箱"""
     pm = api.portal.get_tool(name='portal_membership')
-    userid = pm.getAuthenticatedMember().getId()
-    create_tree(userid)
+    roles = api.user.get_roles()
+    if ('Manager' in roles):
+        pass
+    else:
+        userid = pm.getAuthenticatedMember().getId()
+        create_tree(userid)
            
 
 @grok.subscribe(Interface,IBackMemberAreaCreatedEvent)
