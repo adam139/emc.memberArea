@@ -58,10 +58,10 @@ def create_tree(userid):
                  
     root = root['workspace']
 
-    id = 'myfolder'
-    title = u'个人网盘'.encode("utf-8")
-    item = api.content.create(type='emc.memberArea.myfolder',id=id,title=title,container=root)
-    chown(item,userid)
+#     id = 'myfolder'
+#     title = u'个人网盘'.encode("utf-8")
+#     item = api.content.create(type='emc.memberArea.myfolder',id=id,title=title,container=root)
+#     chown(item,userid)
     id = 'todo'
     title = u'代办事宜'.encode("utf-8")
     item = api.content.create(type='emc.memberArea.todo',id=id,title=title,container=root)
