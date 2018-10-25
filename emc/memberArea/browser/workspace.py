@@ -49,6 +49,6 @@ class WorkspaceView(BrowserView):
         
         fview = getMultiAdapter((context,self.request),name=view)
         # call getMemberList function output table
-        # fetch 20 items roll
+        # fetch 10 items roll
         return fview.getbrains(start=0,size=10,)
             

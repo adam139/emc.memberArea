@@ -15,10 +15,13 @@ class Fixture(PloneSandboxLayer):
     
     def setUpZope(self, app, configurationContext):
         # Load ZCML
+        import Products.ATContentTypes
         import emc.memberArea
         import emc.theme
+        import plone.app.blob
 #        self.loadZCML(package=xtshzz.policy)
-  
+        xmlconfig.file('configure.zcml', Products.ATContentTypes, context=configurationContext)
+        xmlconfig.file('configure.zcml', plone.app.blob, context=configurationContext)
         xmlconfig.file('configure.zcml', emc.memberArea, context=configurationContext)        
         xmlconfig.file('configure.zcml', emc.theme, context=configurationContext)
                       
