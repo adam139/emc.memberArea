@@ -1,6 +1,7 @@
 #-*- coding: UTF-8 -*-
 from plone import api
 from five import grok
+from DateTime import DateTime
 from AccessControl import ClassSecurityInfo, getSecurityManager
 from AccessControl.SecurityManagement import newSecurityManager, setSecurityManager
 from emc.memberArea.interfaces import IMemberAreaCreatedEvent,IBackMemberAreaCreatedEvent,IMessageCreatedEvent
@@ -40,7 +41,11 @@ def Back_create_tree(obj,event):
 def create_tree(userid): 
     pm = api.portal.get_tool(name='portal_membership')
     root = pm.getHomeFolder(userid)
-    if root is None: return
+    if root is None:
+        member = pm.getAuthenticatedMember()
+        default = DateTime('2000/01/01')
+        member.setProperties(login_time=default)
+        return
 # bypass permission check
     old_sm = getSecurityManager()
     portal = api.portal.get()
