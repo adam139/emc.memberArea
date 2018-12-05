@@ -19,7 +19,7 @@ class SendMessageEvent(ObjectEvent):
  
 class MessageCreatedEvent(ObjectCreatedEvent):
     interface.implements(IMessageCreatedEvent)
-class BackMessageCreatedEvent(ObjectCreatedEvent):
+class BackMemberCreatedEvent(ObjectCreatedEvent):
     interface.implements(IBackMemberAreaCreatedEvent)
     
 class FavoriteEvent(ObjectEvent):
