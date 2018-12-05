@@ -42,10 +42,15 @@ def create_tree(userid):
     pm = api.portal.get_tool(name='portal_membership')
     root = pm.getHomeFolder(userid)
     if root is None:
-        member = pm.getAuthenticatedMember()
-        default = DateTime('2000/01/01')
-        member.setProperties(login_time=default)
-        return
+        pm.createMemberarea(member_id=userid)
+    root = pm.getHomeFolder(userid)    
+    if root is None:return
+    id = 'workspace'
+    try:
+        wk = root[id]
+    except:
+        wk = None
+    if wk != None:return
 # bypass permission check
     old_sm = getSecurityManager()
     portal = api.portal.get()
@@ -53,14 +58,10 @@ def create_tree(userid):
     tmp_user = UnrestrictedUser(old_sm.getUser().getId(),'', ['Manager'],'')        
     tmp_user = tmp_user.__of__(portal.acl_users)
     newSecurityManager(None, tmp_user)
-#     _constrain(root, allowed_types)
-  
-    id = 'workspace'
-    title = u'个人工作区'.encode("utf-8")
-    item = api.content.create(type='emc.memberArea.workspace',id=id,title=title,container=root)
     
-    chown(item,userid)
-                 
+    title = u'个人工作区'.encode("utf-8")
+    item = api.content.create(type='emc.memberArea.workspace',id=id,title=title,container=root)    
+    chown(item,userid)                 
     root = root['workspace']
 
 #     id = 'myfolder'
@@ -90,6 +91,7 @@ def create_tree(userid):
     chown(item,userid)    
     # recover old sm
     setSecurityManager(old_sm)
+    return
 
 def get_personal_inputbox_byid(obj,id):
     pm = api.portal.get_tool(name='portal_membership')
