@@ -20,12 +20,12 @@ def create_todoitem(event):
     title = event.title
     userid = event.userid
     sender = event.sender
-    sender = api.user.get(userid=sender).fullname or sender
+
+    if sender !='System':
+        sender = api.user.get(userid=sender).fullname or sender
     description = u"消息来自于：".encode("utf-8")
     description = "%s%s" % (description,sender)
-    text = event.text
-#     import pdb
-#     pdb.set_trace()    
+    text = event.text   
     todofolder = get_personal_todo_container_byid(userid)
     if todofolder is None: return
 # bypass permission check
@@ -40,8 +40,7 @@ def create_todoitem(event):
     total = str(int(getattr(todofolder, 'todoitems', '0')) + 1)
     id = '%s' % total
     todofolder.todoitems = id
-#     import pdb
-#     pdb.set_trace()
+
     todoitem = api.content.create(
                                   type="emc.memberArea.todoitem",
                                   title=title,
