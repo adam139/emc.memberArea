@@ -19,6 +19,8 @@ class SendMessageEvent(ObjectEvent):
  
 class MessageCreatedEvent(ObjectCreatedEvent):
     interface.implements(IMessageCreatedEvent)
+    
+    
 class BackMemberCreatedEvent(ObjectCreatedEvent):
     interface.implements(IBackMemberAreaCreatedEvent)
     
