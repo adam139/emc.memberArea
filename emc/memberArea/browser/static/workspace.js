@@ -17,7 +17,7 @@ $(document).ready(function(){
 		  var uid = $(this).attr('rel');
 		  var action = $("#favcontent").attr('data-ajax-target');
 			var states = {'uid': uid};
-			$(this).removeClass('off').addClass('on');			
+			$(this).removeClass('off').addClass('on');
 			$.post(action, states, function(result){
 			var res = result["result"];
 				if (res == 1) {
@@ -28,7 +28,7 @@ $(document).ready(function(){
 			}, 'json');
 		
 		});
-	$('[data-toggle="tooltip"]').tooltip();			
+	$('[data-toggle="tooltip"]').tooltip();
 
 	});
 });

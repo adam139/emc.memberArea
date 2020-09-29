@@ -25,6 +25,8 @@
       <value key="js">++resource++emc.memberArea/ajaxload_more.js</value>
       <value key="deps">jquery</value>
  </records> 
+ 
+ 
   <!-- Bundles -->
   <records prefix="plone.bundles/workspace-legacy"
             interface='Products.CMFPlone.interfaces.IBundleRegistry'>    
@@ -34,7 +36,10 @@
     <value key="compile">False</value>
     <value key="enabled">False</value>
     <value key="stub_js_modules">
+        <element>jquery</element>
         <element>table-sort</element>
-    </value>    
+        <element>bootstrap-tabs</element>
+        <element>bootstrap-tooltip</element>
+    </value>
   </records>
 </registry>
