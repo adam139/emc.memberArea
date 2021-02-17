@@ -12,9 +12,8 @@
   <records prefix="plone.resources/bootstrap-tabs"
             interface='Products.CMFPlone.interfaces.IResourceRegistry'>
       <value key="js">++plone++static/components/bootstrap/js/tab.js</value>
-
       <value key="deps">jquery</value>
- </records>
+  </records>
   <records prefix="plone.resources/table-sort"
             interface='Products.CMFPlone.interfaces.IResourceRegistry'>
       <value key="js">++resource++emc.memberArea/table_sort.js</value>
